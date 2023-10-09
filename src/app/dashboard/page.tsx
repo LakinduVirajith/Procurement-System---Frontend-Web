@@ -1,13 +1,24 @@
-import SideNav from '@/components/SideNav'
-import React from 'react'
+'use client'
+import { getUserRole } from "@/lib/tokenService"
+import { useRouter } from "next/navigation"
+
+const userData = {
+  userRole: getUserRole(),
+};
 
 export default function Dashboard() {
+  const router = useRouter()
+
+  if(userData.userRole === 'ADMIN'){
+    router.push("/dashboard/user/details")
+  }else if(userData.userRole === 'SITE_MANAGER'){
+    router.push("/dashboard/procurement/approval")
+  }else{
+    router.push("/login")
+  }
+  
   return (
-    <div className="page-style flex-row p-0">
-      <SideNav />
-      <div className='w-full'>
-        <h1>Dashboard</h1>
-      </div>
-    </div>
+    <>
+    </>
   )
 }
