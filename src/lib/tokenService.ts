@@ -82,3 +82,16 @@ export function validateRefreshToken() {
     return false;
   }
 }
+
+export function getUserName(){
+  const accessToken = getAccessToken();
+
+  if (accessToken !== undefined) { 
+    try {
+      const payload = JSON.parse(atob(accessToken.split('.')[1]));     
+      return payload.sub;
+    } catch (error) {
+      return undefined;
+    } 
+  }
+}

@@ -20,3 +20,14 @@ h1, h2, h3, h4, h5, h6{
 .button-style-1{
     @apply w-full border !bg-zinc-950 text-white p-2 rounded-md hover:!bg-black
 }
+
+/* MENU STYLE */
+.menu-style{
+    @apply flex justify-between items-center text-zinc-900 my-1 px-3 py-2 cursor-pointer rounded-md
+}
+.selected-menu{
+    @apply bg-zinc-900 text-white hover:!bg-zinc-900
+}
+.list-style{
+    @apply rounded-md w-full px-2 py-1 cursor-pointer
+}
