@@ -5,6 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleDown, faBars } from '@fortawesome/free-solid-svg-icons'
 import { sidebarData } from './../lib/sidebarData';
 import { useState } from 'react';
+import {Button} from "@nextui-org/react";
 import Image from 'next/image';
 
 const userData = {
@@ -118,7 +119,7 @@ export default function SideNav() {
 
                 {/* SECTION 4 */}
                 <div className='mx-3 mb-3'>
-                    <button className='button-style-1' onClick={logout}>Logout</button>
+                    <Button onClick={logout} color="default" className='button-style-1 w-full'>Logout</Button>
                 </div>
             </nav>
         </aside>

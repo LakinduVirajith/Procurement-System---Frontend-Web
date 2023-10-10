@@ -10,7 +10,7 @@ export default function Dashboard() {
   const router = useRouter()
 
   if(userData.userRole === 'ADMIN'){
-    router.push("/dashboard/user/details")
+    router.push("/dashboard/user/create")
   }else if(userData.userRole === 'SITE_MANAGER'){
     router.push("/dashboard/procurement/approval")
   }else{

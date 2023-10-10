@@ -11,3 +11,9 @@ type AuthenticationResponse = {
   accessToken: string,
   refreshToken: string
 }
+
+type ResponseMessage = {
+  statusCode: number,
+  status: string,
+  message: string
+}

@@ -6,6 +6,9 @@
 h1, h2, h3, h4, h5, h6{
     @apply text-zinc-900
 }
+.error-text{
+    @apply text-red-700 font-medium text-xs pl-3
+}
 
 /* INPUT STYLES */
 .input-wapper{
@@ -18,7 +21,7 @@ h1, h2, h3, h4, h5, h6{
 
 /* BUTTON STYLES */
 .button-style-1{
-    @apply w-full border !bg-zinc-950 text-white p-2 rounded-md hover:!bg-black
+    @apply !bg-zinc-900 !text-white !rounded-lg
 }
 
 /* MENU STYLE */
