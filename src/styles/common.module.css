@@ -35,7 +35,7 @@ h1, h2, h3, h4, h5, h6{
     @apply bg-zinc-900 text-white hover:!bg-zinc-900
 }
 .list-style{
-    @apply rounded-md w-full text-black px-2 py-1 cursor-pointer
+    @apply rounded-md w-full text-black text-sm p-2 cursor-pointer
 }
 
 /* TABLE STYLES */
