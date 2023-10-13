@@ -1,68 +1,65 @@
 'use client'
+import React from 'react'
 import { setAccessToken, setRefreshToken, setUserRole } from '@/lib/tokenService'
 import { loginAction } from '@/server/_loginAction'
 import { useRouter } from "next/navigation"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
+import {Input} from '@nextui-org/react'
+import {Button} from '@nextui-org/react'
 import toast from 'react-hot-toast'
-import { useState } from 'react'
 
 export default function LoginPage() {
-    const [showPassword, setShowPassowrd] = useState(false)
-    const [inputPassword, setInputPassword] = useState("password")
     const router = useRouter()
+    const [email, setEmail] = React.useState("")
+    const [password, setPassword] = React.useState("")
 
-    async function loginHandler(form: FormData) {
-        const response: AuthenticationResponse = await loginAction(form)
+    /* PASSWORD VISIBILITY */
+    const [isVisible, setIsVisible] = React.useState(false)
+    const toggleVisibility = () => setIsVisible(!isVisible)
+
+    /* LOGIN SERVER ACTION HANDLE */
+    async function loginHandler() {
+        const response: AuthenticationResponse = await loginAction(email, password)
         
-        if(response.statusCode === 200) {
-            setAccessToken(response.accessToken)
-            setRefreshToken(response.refreshToken)
-            setUserRole(response.userRole)
+        if(response.statusCode === 200) {            
+            if(response.accessToken)
+                setAccessToken(response.accessToken)
+            if(response.refreshToken)
+                setRefreshToken(response.refreshToken)
+            if(response.userRole)
+                setUserRole(response.userRole)
             
             toast.success(response.message)
             router.push('/dashboard')
         }
-        else (toast.error(response.message))
-    }
-
-    function passwordHandler(type: number){
-        if(type == 1){
-            setShowPassowrd(true)
-            setInputPassword("text")
-        }else{
-            setShowPassowrd(false)
-            setInputPassword("password")
-        }
+        else (toast.error(response.statusCode + ": " + response.message))
     }
 
     return (
         <div className="page-style">
-            <form action={loginHandler} className='bg-white rounded-md px-14 py-6'>
-                <div className="input-wapper">
-                    <label>User Name</label>
-                    <input type="text" name="email" placeholder="lakindu@gmail.com" className="input-style"/>
-                </div>
+            <form action={loginHandler} className='bg-white rounded-lg px-14 py-6'>
                 
-                <div className="input-wapper">
-                    <label>Password</label>
-                    <div className="input-style flex">
-                        <input type={inputPassword} name="password" placeholder="********" className='outline-none'/>
-                        {!showPassword? (
-                            <FontAwesomeIcon icon={faEyeSlash} 
-                                className='text-zinc-900 cursor-pointer flex my-auto h-4' 
-                                onClick={() => passwordHandler(1)}/>
-                        ):(
-                            <FontAwesomeIcon icon={faEye} 
-                                className='text-zinc-900 cursor-pointer flex my-auto h-4' 
-                                onClick={() => passwordHandler(2)}/>
-                        )}
-                    </div>
-                </div>
+                <Input  type="text" label="User Name" value={email}
+                        onValueChange={setEmail} placeholder="lakindu@gmail.com"
+                        variant="bordered" className="input-style mt-2" 
+                />
                 
-                <button type="submit" className="button-style-1 my-2" >
-                    Login
-                </button>
+                <Input  type={isVisible ? "text" : "password"} label="Password" value={password} 
+                        onValueChange={setPassword} placeholder="********" variant="bordered"
+                        endContent={
+                            <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
+                                {isVisible ? (
+                                    <FontAwesomeIcon icon={faEyeSlash} className="text-lg text-default-800 pointer-events-none"/>
+                                ) : (
+                                    <FontAwesomeIcon icon={faEye} className="text-lg text-default-800 pointer-events-none"/>
+                                )}
+                            </button>
+                        }
+                        className="input-style"
+                />
+                
+                <Button type="submit" color="default" className='button-style-1 w-full mb-2'>Login</Button>
             </form>
         </div>
     )

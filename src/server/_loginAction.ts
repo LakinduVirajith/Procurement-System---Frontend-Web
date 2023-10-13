@@ -1,13 +1,10 @@
 'use server'
 import { loginSchema } from "@/validation/loginSchema";
-import { NextResponse } from "next/server";
 
-export async function loginAction(form: FormData) {
-    const { email, password } = Object.fromEntries(form)
-    
+export async function loginAction(reqEmail: string, reqPassword: string): Promise<AuthenticationResponse> {
     const request: AuthenticationRequest = {
-      email: email.toString(),
-      password: password.toString()
+      email: reqEmail,
+      password: reqPassword
     }
 
     /* ZOD VALIDATIONS */
@@ -16,9 +13,10 @@ export async function loginAction(form: FormData) {
     } catch (error: any) {
       return {
         statusCode: 400,
-        message: error.errors[0].message,
-      };
-    }    
+        status: "BAD_REQUEST",
+        message: error.errors[0].message
+      }
+    }
 
     /* USER LOGIN */
     const response = await fetch(`${process.env.BASE_URL_V1}/user/login`, {
@@ -30,5 +28,5 @@ export async function loginAction(form: FormData) {
       cache: "no-cache",
     });
     
-    return response.json();
+    return await response.json()
   }

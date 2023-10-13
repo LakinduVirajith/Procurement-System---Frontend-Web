@@ -30,5 +30,5 @@ export const sidebarData = [
         { label: 'assign supplier', route: '/dashboard/procurement/supplier' },
       ],
     },
-  ];
+];
   

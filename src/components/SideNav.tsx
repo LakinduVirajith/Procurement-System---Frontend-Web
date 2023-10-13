@@ -3,8 +3,9 @@ import { getUserName, getUserRole, removeAccessToken, removeRefreshToken, remove
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleDown, faBars } from '@fortawesome/free-solid-svg-icons'
-import { sidebarData } from './../lib/sidebarData';
+import { sidebarData } from '../lib/sidebarData';
 import { useState } from 'react';
+import {Button} from "@nextui-org/react";
 import Image from 'next/image';
 
 const userData = {
@@ -56,8 +57,8 @@ export default function SideNav() {
                         src="/images/logo-with-name.png"
                         width={160} height={160} alt={'logo'}
                     />
-                    <button className='p-1 rounded-md bg-gray-50 hover:bg-gray-100'>
-                        <FontAwesomeIcon icon={faBars} className='h-4'/>
+                    <button className='p-1 rounded-md bg-gray-100 hover:bg-gray-200'>
+                        <FontAwesomeIcon icon={faBars} className='h-4 text-black'/>
                     </button>
                 </div>
 
@@ -118,7 +119,7 @@ export default function SideNav() {
 
                 {/* SECTION 4 */}
                 <div className='mx-3 mb-3'>
-                    <button className='button-style-1' onClick={logout}>Logout</button>
+                    <Button onClick={logout} color="default" className='button-style-1 w-full'>Logout</Button>
                 </div>
             </nav>
         </aside>

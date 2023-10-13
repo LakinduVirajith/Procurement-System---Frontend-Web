@@ -48,7 +48,7 @@ export function removeUserRole() {
 }
 
 export function validateAccessToken() {
-    const accessToken = getAccessToken();
+    const accessToken = getAccessToken()
   
     if (!accessToken) {
       return false;
