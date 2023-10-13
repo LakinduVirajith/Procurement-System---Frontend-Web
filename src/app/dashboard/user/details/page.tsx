@@ -12,6 +12,8 @@ import { resetPasswordSchema } from '@/validation/resetPasswordSchema'
 import { resetPasswordAction } from '@/server/_resetPassowrdAction'
 import { allocateSiteSchema } from '@/validation/allocateSiteSchema'
 import { allocateSiteAction } from '@/server/_allocateSiteAction'
+import { deallocateSiteSchema } from '@/validation/deallocateSiteSchema'
+import { deallocateSiteAction } from '@/server/_deallocateSiteAction'
 
 export default function CreateDetails() {
   const router = useRouter()
@@ -121,6 +123,56 @@ export default function CreateDetails() {
     setAllocateZodErrors([]);
   };
 
+  /* DEALLOCATE FORM FIELDS */
+  const [deallocateFormData, setDeallocateFormData] = React.useState<deallocateSite>({
+    siteId: "", userEmail: "", 
+  });
+
+  
+  /* DEALLOCATE ZOD VALIDATION */
+  const [zodDeallocateErrors, setDeallocateZodErrors] = React.useState<any[]>([]);
+  const handleDeallocateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
+    e.preventDefault();
+    setDeallocateZodErrors([]); 
+
+    try {
+      deallocateSiteSchema.parse(deallocateFormData);
+    } catch (error: any) {      
+      setDeallocateZodErrors(error.errors)
+      toast.error("400: " + error.errors[0].message)
+    }
+  };
+
+  /* DEALLOCATE FORM SUBMISSION */
+  useEffect(() => {    
+    if (zodDeallocateErrors.length === 0 && deallocateFormData.siteId !== '') {
+      submitDeallocateForm()
+    }
+  }, [zodDeallocateErrors]);
+
+  async function submitDeallocateForm(){
+    const response: ResponseMessage = await deallocateSiteAction(deallocateFormData, getAccessToken())
+    
+    if (response.statusCode === 200) {
+      clearDeallocateForm()
+      toast.success(response.message);
+    }
+    else if(Number.isInteger(response.status)){
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+    }
+    else {
+      toast.error(response.statusCode + ": " + response.message);
+    }
+  }
+
+  /* DEALLOCATE FORM DATA CLEAR */
+  const clearDeallocateForm = () => {
+    setDeallocateFormData({
+      siteId: "", userEmail: ""
+    });
+    setDeallocateZodErrors([]);
+  };
+
   return (
     <div className='dashboard-style'>
       <form onSubmit={handleResetSubmit}>
@@ -198,6 +250,41 @@ export default function CreateDetails() {
             <Input  type="text" label="User Email" value={allocateFormData.userEmail}
                     variant="bordered" className="input-style" isClearable 
                     onChange={(e) => setAllocateFormData({ ...allocateFormData, userEmail: e.target.value })}
+            />
+          </section>
+        </div>
+      </form>
+
+      <form onSubmit={handleDeallocateSubmit} className='mt-4'>
+        {/* DEALLOCATE FORM HEADER */}
+        <div className='flex justify-between mb-4'>
+          <h1 className='font-semibold text-xl text-zinc-900'>DEALLOCATE USER</h1>
+
+          <section className='flex gap-4'>
+            <Button type="submit" color="default" className='button-style-1' 
+                  startContent={<FontAwesomeIcon icon={faUserMinus} />}>
+              Deallocate User
+            </Button>
+            <Button type="button" color="default" className='button-style-1' onClick={clearDeallocateForm}
+                  startContent={<FontAwesomeIcon icon={faEraser} className='text-medium'/>} >
+              Clear Form
+            </Button>
+          </section>
+        </div>
+
+        {/* DEALLOCATE FORM BODY */}
+        <div className='grid grid-cols-2 gap-x-4'>
+          <section>
+            <Input  type="number" label="Site ID" value={deallocateFormData.siteId}
+                    variant="bordered" className="input-style"  min={1}
+                    onChange={(e) => setDeallocateFormData({ ...deallocateFormData, siteId: e.target.value })}
+            />
+          </section>
+
+          <section>
+            <Input  type="text" label="User Email" value={deallocateFormData.userEmail}
+                    variant="bordered" className="input-style" isClearable 
+                    onChange={(e) => setDeallocateFormData({ ...deallocateFormData, userEmail: e.target.value })}
             />
           </section>
         </div>
