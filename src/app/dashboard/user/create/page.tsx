@@ -4,12 +4,12 @@ import React, { useEffect } from 'react'
 import toast from 'react-hot-toast'
 import { getAccessToken, getUserRole } from '@/lib/tokenService'
 import { useRouter } from 'next/navigation'
-import {Input} from '@nextui-org/react';
-import {Select, SelectItem} from '@nextui-org/react';
-import {Button} from '@nextui-org/react';
+import {Input} from '@nextui-org/react'
+import {Select, SelectItem} from '@nextui-org/react'
+import {Button} from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faCloudArrowUp, faEraser } from '@fortawesome/free-solid-svg-icons'
-import { userRoleData, isActiveData } from "../../../../lib/loginEnumData";
+import { userRoleData, isActiveData } from "../../../../lib/loginEnumData"
 import { createUserSchema } from '@/validation/createUserSchema'
 import { createUserAction } from '@/server/_createUserAction'
 
@@ -23,7 +23,7 @@ export default function UserCreate() {
   }
 
   /* FORM FIELDS */
-  const [formData, setFormData] = React.useState<userDTO>({
+  const [formData, setFormData] = React.useState<UserDTO>({
     firstName: "", lastName: "",
     email: "", mobileNumber: "",
     password: "", role: "",
@@ -175,7 +175,7 @@ export default function UserCreate() {
         </section>
         
         <section>
-          <Select label="Is Active" className="input-style" value={formData.isActive}
+          <Select label="Is Active" className="input-style" value={formData.isActive.toString()}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.value })}
           >
             {isActiveData.map((state) => (

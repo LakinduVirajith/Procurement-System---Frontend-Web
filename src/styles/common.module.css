@@ -37,3 +37,12 @@ h1, h2, h3, h4, h5, h6{
 .list-style{
     @apply rounded-md w-full text-black px-2 py-1 cursor-pointer
 }
+
+/* TABLE STYLES */
+
+.status-red-style{
+    @apply rounded-md bg-red-400 text-red-800 font-normal w-20 text-center px-4 py-2
+}
+.status-green-style{
+    @apply rounded-md bg-green-400 text-green-800 font-normal w-20 text-center px-4 py-2
+}
