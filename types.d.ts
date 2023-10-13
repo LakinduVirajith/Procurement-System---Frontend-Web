@@ -45,6 +45,17 @@ type DeallocateSite = {
   userEmail: string,
 }
 
+type SiteDTO = {
+  siteId: string;
+  siteName: string;
+  location: string;
+  startDate: string;
+  contactNumber: string;
+  allocatedBudget: string;
+  siteManagerId: string;
+  procurementManagerId: string;
+}
+
 type Pageable = {
   page: number,
   size: number,
