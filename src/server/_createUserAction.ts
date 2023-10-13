@@ -1,5 +1,5 @@
 'use server'
-export async function createUserAction(formData: userDTO, accessToken: any) {
+export async function createUserAction(formData: UserDTO, accessToken: any) {
 
     const response = await fetch(`${process.env.BASE_URL_V1}/super-admin/register`, {
         method: 'POST',

@@ -1,5 +1,6 @@
 'use client'
-import { getUserName, getUserRole, removeAccessToken, removeRefreshToken, removeUserRole } from '@/lib/tokenService'
+import toast from 'react-hot-toast'
+import { getAccessToken, getUserName, getUserRole, removeAccessToken, removeRefreshToken, removeUserRole } from '@/lib/tokenService'
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleDown, faBars } from '@fortawesome/free-solid-svg-icons'
@@ -7,6 +8,7 @@ import { sidebarData } from '../lib/sidebarData';
 import { useState } from 'react';
 import {Button} from "@nextui-org/react";
 import Image from 'next/image';
+import { logoutAction } from '@/server/_logoutAction';
 
 const userData = {
     userName: getUserName(),
@@ -40,12 +42,22 @@ export default function SideNav() {
         router.push(route);
     };
 
-    function logout(){
-        removeAccessToken()
-        removeRefreshToken()
-        removeUserRole()
+    async function logout(){
+        const response: ResponseMessage = await logoutAction(getAccessToken())
 
-        router.push('/login')
+        if (response.statusCode === 200) {
+            toast.success(response.message);
+            removeAccessToken()
+            removeRefreshToken()
+            removeUserRole()
+
+            router.push('/login')
+        } 
+        else if(Number.isInteger(response.status)){
+            toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+        }else {
+            toast.error(response.statusCode + ": " + response.message);
+        }
     }
 
     return (

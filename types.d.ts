@@ -19,27 +19,38 @@ type ResponseMessage = {
   title:? string,
 }
 
-type userDTO = {
+type UserDTO = {
+  userId?: string
   firstName: string,
   lastName: string,
   email: string,
   mobileNumber: string,
   password: string,
   role: string,
-  isActive: string,
+  isActive: string | boolean,
 }
 
-type resetPassword = {
+type ResetPassword = {
   email: string,
   password: string,
 }
 
-type allocateSite = {
+type AllocateSite = {
   siteId: string,
   userEmail: string,
 }
 
-type deallocateSite = {
+type DeallocateSite = {
   siteId: string,
   userEmail: string,
+}
+
+type Pageable = {
+  page: number,
+  size: number,
+  sort: [
+    string
+  ]
+  totalPages: number
+  totalElements: number
 }

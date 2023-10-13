@@ -1,5 +1,5 @@
 'use server'
-export async function allocateSiteAction(formData: deallocateSite, accessToken: any) {
+export async function allocateSiteAction(formData: DeallocateSite, accessToken: any) {
     const URL = `${process.env.BASE_URL_V1}/super-admin/site/allocate?userEmail=${formData.userEmail}`
     const response = await fetch(URL , {
         method: 'PUT',

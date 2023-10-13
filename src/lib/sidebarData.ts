@@ -4,30 +4,30 @@ export const sidebarData = [
     {
       menu: 'user',
       icon: faUsersGear,
-      label: 'User',
+      label: 'USER',
       submenu: [
-        { label: 'create user', route: '/dashboard/user/create' },
-        { label: 'user details', route: '/dashboard/user/details' },
-        { label: 'user status', route: '/dashboard/user/status' },
+        { label: 'CREATE USER', route: '/dashboard/user/create' },
+        { label: 'USER DETAILS', route: '/dashboard/user/details' },
+        { label: 'USER STATUS', route: '/dashboard/user/status' },
       ],
     },
     {
       menu: 'site',
       icon: faBuilding,
-      label: 'Site',
+      label: 'SITE',
       submenu: [
-        { label: 'site informations', route: '/dashboard/site/info' },
-        { label: 'create site', route: '/dashboard/site/create' },
-        { label: 'update site', route: '/dashboard/site/update' },
+        { label: 'SITE INFORMATIONS', route: '/dashboard/site/info' },
+        { label: 'CREATE SITE', route: '/dashboard/site/create' },
+        { label: 'UPDATE SITE', route: '/dashboard/site/update' },
       ],
     },
     {
       menu: 'procurement',
       icon: faFileSignature,
-      label: 'Procurement',
+      label: 'PROCUREMENT',
       submenu: [
-        { label: 'order approval', route: '/dashboard/procurement/approval' },
-        { label: 'assign supplier', route: '/dashboard/procurement/supplier' },
+        { label: 'ORDER APPROVAL', route: '/dashboard/procurement/approval' },
+        { label: 'ASSIGN SUPPLIER', route: '/dashboard/procurement/supplier' },
       ],
     },
 ];

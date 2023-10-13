@@ -6,8 +6,8 @@ import { getAccessToken, getUserRole } from '@/lib/tokenService'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faKey, faUserPlus, faUserMinus, faEraser } from '@fortawesome/free-solid-svg-icons'
-import {Input} from '@nextui-org/react';
-import {Button} from '@nextui-org/react';
+import {Input} from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
 import { resetPasswordSchema } from '@/validation/resetPasswordSchema'
 import { resetPasswordAction } from '@/server/_resetPassowrdAction'
 import { allocateSiteSchema } from '@/validation/allocateSiteSchema'
@@ -29,7 +29,7 @@ export default function CreateDetails() {
   const toggleVisibility = () => setIsVisible(!isVisible)
 
   /* RESET FORM FIELDS */
-  const [resetFormData, setResetFormData] = React.useState<resetPassword>({
+  const [resetFormData, setResetFormData] = React.useState<ResetPassword>({
     email: "", password: "", 
   });
 
@@ -74,7 +74,7 @@ export default function CreateDetails() {
   };
 
   /* ALLOCATE FORM FIELDS */
-  const [allocateFormData, setAllocateFormData] = React.useState<allocateSite>({
+  const [allocateFormData, setAllocateFormData] = React.useState<AllocateSite>({
     siteId: "", userEmail: "", 
   });
 
@@ -124,7 +124,7 @@ export default function CreateDetails() {
   };
 
   /* DEALLOCATE FORM FIELDS */
-  const [deallocateFormData, setDeallocateFormData] = React.useState<deallocateSite>({
+  const [deallocateFormData, setDeallocateFormData] = React.useState<DeallocateSite>({
     siteId: "", userEmail: "", 
   });
 
