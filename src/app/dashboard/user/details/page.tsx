@@ -10,6 +10,8 @@ import {Input} from '@nextui-org/react';
 import {Button} from '@nextui-org/react';
 import { resetPasswordSchema } from '@/validation/resetPasswordSchema'
 import { resetPasswordAction } from '@/server/_resetPassowrdAction'
+import { allocateSiteSchema } from '@/validation/allocateSiteSchema'
+import { allocateSiteAction } from '@/server/_allocateSiteAction'
 
 export default function CreateDetails() {
   const router = useRouter()
@@ -69,6 +71,56 @@ export default function CreateDetails() {
     setResetZodErrors([]);
   };
 
+  /* ALLOCATE FORM FIELDS */
+  const [allocateFormData, setAllocateFormData] = React.useState<allocateSite>({
+    siteId: "", userEmail: "", 
+  });
+
+  
+  /* ALLOCATE ZOD VALIDATION */
+  const [zodAllocateErrors, setAllocateZodErrors] = React.useState<any[]>([]);
+  const handleAllocateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
+    e.preventDefault();
+    setAllocateZodErrors([]); 
+
+    try {
+      allocateSiteSchema.parse(allocateFormData);
+    } catch (error: any) {      
+      setAllocateZodErrors(error.errors)
+      toast.error("400: " + error.errors[0].message)
+    }
+  };
+
+  /* ALLOCATE FORM SUBMISSION */
+  useEffect(() => {    
+    if (zodAllocateErrors.length === 0 && allocateFormData.siteId !== '') {
+      submitAllocateForm()
+    }
+  }, [zodAllocateErrors]);
+
+  async function submitAllocateForm(){
+    const response: ResponseMessage = await allocateSiteAction(allocateFormData, getAccessToken())
+    
+    if (response.statusCode === 200) {
+      clearAllocateForm()
+      toast.success(response.message);
+    }
+    else if(Number.isInteger(response.status)){
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+    }
+    else {
+      toast.error(response.statusCode + ": " + response.message);
+    }
+  }
+
+  /* ALLOCATE FORM DATA CLEAR */
+  const clearAllocateForm = () => {
+    setAllocateFormData({
+      siteId: "", userEmail: ""
+    });
+    setAllocateZodErrors([]);
+  };
+
   return (
     <div className='dashboard-style'>
       <form onSubmit={handleResetSubmit}>
@@ -111,6 +163,41 @@ export default function CreateDetails() {
                     type={isVisible ? "text" : "password"}
                     className="input-style"
                     onChange={(e) => setResetFormData({ ...resetFormData, password: e.target.value })}
+            />
+          </section>
+        </div>
+      </form>
+      
+      <form onSubmit={handleAllocateSubmit} className='mt-4'>
+        {/* ALLOCATE FORM HEADER */}
+        <div className='flex justify-between mb-4'>
+          <h1 className='font-semibold text-xl text-zinc-900'>ALLOCATE USER TO SITE</h1>
+
+          <section className='flex gap-4'>
+            <Button type="submit" color="default" className='button-style-1' 
+                  startContent={<FontAwesomeIcon icon={faUserPlus} />}>
+              Allocate User
+            </Button>
+            <Button type="button" color="default" className='button-style-1' onClick={clearAllocateForm}
+                  startContent={<FontAwesomeIcon icon={faEraser} className='text-medium'/>} >
+              Clear Form
+            </Button>
+          </section>
+        </div>
+
+        {/* ALLOCATE FORM BODY */}
+        <div className='grid grid-cols-2 gap-x-4'>
+          <section>
+            <Input  type="number" label="Site ID" value={allocateFormData.siteId}
+                    variant="bordered" className="input-style"  min={1}
+                    onChange={(e) => setAllocateFormData({ ...allocateFormData, siteId: e.target.value })}
+            />
+          </section>
+
+          <section>
+            <Input  type="text" label="User Email" value={allocateFormData.userEmail}
+                    variant="bordered" className="input-style" isClearable 
+                    onChange={(e) => setAllocateFormData({ ...allocateFormData, userEmail: e.target.value })}
             />
           </section>
         </div>
