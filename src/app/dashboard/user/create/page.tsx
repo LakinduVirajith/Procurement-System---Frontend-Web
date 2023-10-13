@@ -2,37 +2,31 @@
 'use client'
 import React, { useEffect } from 'react'
 import toast from 'react-hot-toast'
-import { getUserRole } from "@/lib/tokenService"
-import { useRouter } from "next/navigation"
-import {Input} from "@nextui-org/react";
-import {Select, SelectItem} from "@nextui-org/react";
-import {Button} from "@nextui-org/react";
+import { getAccessToken, getUserRole } from '@/lib/tokenService'
+import { useRouter } from 'next/navigation'
+import {Input} from '@nextui-org/react';
+import {Select, SelectItem} from '@nextui-org/react';
+import {Button} from '@nextui-org/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faCloudArrowUp, faEraser } from '@fortawesome/free-solid-svg-icons'
 import { userRoleData, isActiveData } from "../../../../lib/loginEnumData";
 import { createUserSchema } from '@/validation/createUserSchema'
-
-const userData = {
-  userRole: getUserRole(),
-};
+import { createUserAction } from '@/server/_createUserAction'
 
 export default function UserCreate() {
   const router = useRouter()
 
   /* UNAUTHORIZED */
-  if(userData.userRole !== 'ADMIN'){
-    toast.error('You are not authorized to access')
+  if(getUserRole() !== 'ADMIN'){
+    toast.error('403: You are not authorized to access')
     router.push('/dashboard/procurement/approval')
   }
 
-   /* FORM FIELDS */
-   const [formData, setFormData] = React.useState({
-    firstName: "",
-    lastName: "",
-    email: "",
-    mobileNumber: "",
-    password: "",
-    userRole: "",
+  /* FORM FIELDS */
+  const [formData, setFormData] = React.useState<userDTO>({
+    firstName: "", lastName: "",
+    email: "", mobileNumber: "",
+    password: "", role: "",
     isActive: "",
   });
 
@@ -53,47 +47,40 @@ export default function UserCreate() {
     }
   };
 
-  useEffect(() => {
+  /* FORM SUBMISSION */
+  useEffect(() => {    
     if (zodErrors.length === 0 && formData.firstName !== '') {
       submitForm()
     }
   }, [zodErrors]);
 
-  /* FORM SUBMISSION */
   async function submitForm(){
-
-    const response: ResponseMessage = await fetch("api/user/create", {
-      method: "POST",
-      body: JSON.stringify(formData),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    }).then((res) => res.json());
-
+    const response: ResponseMessage = await createUserAction(formData, getAccessToken())
+    
     if (response.statusCode === 200) {
+      clearForm()
       toast.success(response.message);
+    }
+    else if(Number.isInteger(response.status)){
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
     } else {
-      toast.error(response.message);
+      toast.error(response.statusCode + ": " + response.message);
     }
   }
 
   /* FORM DATA CLEAR */
   const clearForm = () => {
     setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      mobileNumber: "",
-      password: "",
-      userRole: "",
+      firstName: "", lastName: "",
+      email: "", mobileNumber: "",
+      password: "", role: "",
       isActive: "",
     });
     setZodErrors([]);
-    window.location.reload();
   };
 
   return (
-    <form onSubmit={handleSubmit} className='p-8'>
+    <form onSubmit={handleSubmit} className='dashboard-style'>
       {/* FORM HEADER */}
       <div className='flex justify-between mb-4'>
         <h1 className='font-semibold text-xl text-zinc-900'>CREATE USER FORM</h1>
@@ -111,10 +98,10 @@ export default function UserCreate() {
       </div>
 
       {/* FORM BODY */}
-      <div className='grid grid-cols-2 gap-4'>
+      <div className='grid grid-cols-2 gap-x-4'>
         <section>
-          <Input  type="text" label="First Name" 
-                  variant="bordered" className="bg-white rounded-xl" 
+          <Input  type="text" label="First Name" value={formData.firstName}
+                  variant="bordered" className="input-style" 
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
           />
           {zodErrors.find((error) => error.path[0] === 'firstName') && (
@@ -123,8 +110,8 @@ export default function UserCreate() {
         </section>
         
         <section>
-          <Input  type="text" label="Last Name" 
-                  variant="bordered" className="bg-white rounded-xl" 
+          <Input  type="text" label="Last Name" value={formData.lastName}
+                  variant="bordered" className="input-style" 
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
           />
           {zodErrors.find((error) => error.path[0] === 'lastName') && (
@@ -133,8 +120,8 @@ export default function UserCreate() {
         </section>
 
         <section>
-          <Input  type="email" label="Email" 
-                  variant="bordered" className="bg-white rounded-xl" isClearable 
+          <Input  type="email" label="Email" value={formData.email}
+                  variant="bordered" className="input-style" isClearable 
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
           {zodErrors.find((error) => error.path[0] === 'email') && (
@@ -143,8 +130,8 @@ export default function UserCreate() {
         </section>
 
         <section>
-          <Input  type="number" label="Mobile Number" 
-                  variant="bordered" className="bg-white rounded-xl"
+          <Input  type="number" label="Mobile Number" value={formData.mobileNumber}
+                  variant="bordered" className="input-style"
                   onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
           />
           {zodErrors.find((error) => error.path[0] === 'mobileNumber') && (
@@ -153,7 +140,7 @@ export default function UserCreate() {
         </section>
 
         <section>
-          <Input  label="Password" variant="bordered"
+          <Input  label="Password" variant="bordered" value={formData.password}
                   endContent={
                     <button className="focus:outline-none" type="button" onClick={toggleVisibility}>
                       {isVisible ? (
@@ -164,7 +151,7 @@ export default function UserCreate() {
                     </button>
                   }
                   type={isVisible ? "text" : "password"}
-                  className="bg-white rounded-xl"
+                  className="input-style"
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
           {zodErrors.find((error) => error.path[0] === 'password') && (
@@ -173,11 +160,11 @@ export default function UserCreate() {
         </section>
 
         <section>
-          <Select label="User Role" className="bg-white rounded-xl"
-                  onChange={(e) => setFormData({ ...formData, userRole: e.target.value })}
+          <Select label="User Role" className="input-style" value={formData.role}
+                  onChange={(e) => setFormData({ ...formData, role: e.target.value })}
           >
             {userRoleData.map((role) => (
-              <SelectItem key={role.value} value={role.value}>
+              <SelectItem className="input-style" key={role.value} value={role.value}>
                 {role.label}
               </SelectItem>
             ))}
@@ -188,12 +175,12 @@ export default function UserCreate() {
         </section>
         
         <section>
-          <Select label="Is Active" className="bg-white rounded-xl"
+          <Select label="Is Active" className="input-style" value={formData.isActive}
                   onChange={(e) => setFormData({ ...formData, isActive: e.target.value })}
           >
             {isActiveData.map((state) => (
-              <SelectItem key={state.value} value={state.value}>
-                {state.label}
+              <SelectItem className="input-style" key={state.value} value={state.value}>
+                {state.label} 
               </SelectItem>
             ))}
           </Select>

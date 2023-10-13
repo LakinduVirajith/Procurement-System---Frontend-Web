@@ -9,6 +9,6 @@ export const createUserSchema = z.object({
       .min(7, 'Mobile Number must be at least 7 characters')
       .max(15, 'Mobile Number cannot be more than 15 characters'),
     password: z.string().min(1, 'Password is required'),
-    userRole: z.string().min(1, 'Role is required'),
+    role: z.string().min(1, 'Role is required'),
     isActive: z.string().min(1, 'Status is required'),
 });

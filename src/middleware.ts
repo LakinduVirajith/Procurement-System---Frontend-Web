@@ -11,8 +11,10 @@ export async function middlewareAuth(request: NextRequest) {
             const response: AuthenticationResponse = await tokenAction(refreshToken);
 
             if (response.statusCode === 200) {
-                setAccessToken(response.accessToken);
-                setRefreshToken(response.refreshToken);
+                if(response.accessToken)
+                    setAccessToken(response.accessToken);
+                if(response.refreshToken)
+                    setRefreshToken(response.refreshToken);
                 return NextResponse.redirect(new URL('/dashboard', request.url))
             } else {
                 return NextResponse.redirect(new URL('/login', request.url))
@@ -24,7 +26,7 @@ export async function middlewareAuth(request: NextRequest) {
 export async function middlewareRedirect(request: NextRequest) {
     const url = request.url;
 
-    if(url.includes('login')){
+    if(url.includes('login')){        
         if(validateAccessToken()){
             return NextResponse.redirect(new URL('/dashboard', request.url))
         }
@@ -38,17 +40,17 @@ export async function middlewareRedirect(request: NextRequest) {
 }
 
 export function middlewareHeaders(request: NextRequest) {
-    const accessToken = getAccessToken()
-    
+    const accessToken = getAccessToken()    
+
     if(accessToken){
         request.headers.set('Authorization', `Bearer ${accessToken}`)
     }
-
+    
     return NextResponse.next({ request })
 }
 
 export function middleware(request: NextRequest) {
-    middlewareAuth(request)
-    middlewareRedirect(request)
-    middlewareHeaders(request)
+    // middlewareAuth(request)
+    // middlewareRedirect(request)
+    // middlewareHeaders(request)
 }

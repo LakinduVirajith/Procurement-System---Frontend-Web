@@ -12,4 +12,4 @@ export async function tokenAction(refreshToken: string) {
     });
   
     return response.json();
-  }
+}
