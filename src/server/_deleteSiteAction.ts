@@ -1,9 +1,8 @@
 'use server'
-export async function getAllUsersAction(pageable: Pageable, accessToken: any) {
-    const URL = `${process.env.BASE_URL_V1}/super-admin/get/all/users?page=${pageable.page - 1}&size=${pageable.size}&sort=${pageable.sort[0]}`
-
+export async function deleteSiteAction(siteId: string, accessToken: any) {
+    const URL = `${process.env.BASE_URL_V1}/super-admin/site/delete/${siteId}`
     const response = await fetch(URL , {
-        method: 'GET',
+        method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`

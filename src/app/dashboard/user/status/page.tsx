@@ -1,14 +1,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import toast from 'react-hot-toast'
 import { getAccessToken } from '@/lib/tokenService'
-import { _getAllUsersAction } from '@/server/_getAllUsersAction'
+import { getAllUsersAction } from '@/server/_getAllUsersAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRetweet, faPen, faEraser } from '@fortawesome/free-solid-svg-icons'
-import { Button } from '@nextui-org/react'
-import { Input } from '@nextui-org/react'
-import {Select, SelectItem} from '@nextui-org/react'
+import { Button, Input, Select, SelectItem } from '@nextui-org/react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination } from '@nextui-org/react'
 import { userStatusData, userTableColumns } from '@/lib/userDetailsData'
 import { activateUserAction } from '@/server/_activateUserAction'
@@ -23,7 +21,7 @@ export default function UserStatus() {
   const tableColumns = userTableColumns
   const [usersData, setUsersData] = React.useState<UserDTO[]>([])
   
-  useEffect(() => {
+  React.useEffect(() => {
     fetchAllUsers()
   }, [pageable.page]);
 
@@ -32,7 +30,7 @@ export default function UserStatus() {
     setUsersData([])
     setIsLoading(true)
 
-    const response: any = await _getAllUsersAction(pageable, getAccessToken())        
+    const response: any = await getAllUsersAction(pageable, getAccessToken())        
     
     if(response.content){      
       setUsersData(response.content)
@@ -136,7 +134,7 @@ export default function UserStatus() {
     <div className='dashboard-style'>
       {/* USER INFO TABLE */}
       <div className='flex justify-between mb-4'>
-        <h1 className='font-semibold text-xl text-zinc-900'>USER INFORMATION</h1>
+        <h1 className='font-semibold text-xl text-zinc-900'>SITE INFORMATION</h1>
 
         <section className='flex gap-4'>
           <Button type="submit" color="default" className='button-style-1' onClick={fetchAllUsers}
