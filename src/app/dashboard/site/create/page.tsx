@@ -20,7 +20,7 @@ export default function CreateSite() {
 
   /* ZOD VALIDATION */
   const [zodErrors, setZodErrors] = React.useState<any[]>([]);
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setZodErrors([]); 
 
@@ -68,7 +68,7 @@ export default function CreateSite() {
     <form onSubmit={handleSubmit} className='dashboard-style'>
       {/* FORM HEADER */}
       <div className='flex justify-between mb-4'>
-        <h1 className='font-semibold text-xl text-zinc-900'>CREATE USER FORM</h1>
+        <h1 className='font-semibold text-xl text-zinc-900'>CREATE SITE FORM</h1>
 
         <section className='flex gap-4'>
           <Button type="submit" color="default" className='button-style-1' 

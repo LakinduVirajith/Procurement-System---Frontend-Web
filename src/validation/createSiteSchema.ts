@@ -8,7 +8,7 @@ export const createSiteSchema = z.object({
       .min(1, 'contact number is required')
       .min(7, 'contact number must be at least 7 characters')
       .max(15, 'contact number cannot be more than 15 characters'),
-    allocatedBudget: z.string(),
+    allocatedBudget: z.number(),
     siteManagerId: z.string(),
     procurementManagerId: z.string(),
 });
