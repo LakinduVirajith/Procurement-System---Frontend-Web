@@ -46,12 +46,12 @@ type DeallocateSite = {
 }
 
 type SiteDTO = {
-  siteId: string;
+  siteId?: string;
   siteName: string;
   location: string;
   startDate: string;
   contactNumber: string;
-  allocatedBudget: string;
+  allocatedBudget: number;
   siteManagerId: string;
   procurementManagerId: string;
 }
