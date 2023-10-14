@@ -105,60 +105,60 @@ export default function SiteInfo() {
 
   return (
     <div className='dashboard-style'>
-    {/* SITE INFO TABLE */}
-    <div className='flex justify-between mb-4'>
-      <h1 className='font-semibold text-xl text-zinc-900'>SITE INFORMATION</h1>
-
-      <section className='flex gap-4'>
-        <Button type="submit" color="default" className='button-style-1' onClick={fetchAllSites}
-            startContent={<FontAwesomeIcon icon={faRetweet} />}>
-              Refetch
-        </Button>
-        </section>
-    </div>
-      
-    {/* SITE INFO TABLE */}
-    <Table bottomContent={bottomContent}>
-      <TableHeader>
-        {tableColumns.map((column) =>
-          <TableColumn key={column.key}>{column.label}</TableColumn>
-        )}
-      </TableHeader>
-      <TableBody  emptyContent={" "}
-                  isLoading={isLoading}
-                  loadingContent={<h1>Loading...</h1>}>
-        {sitesData.map((row) =>
-          <TableRow key={row.siteId}>
-            {(columnKey) => (columnKey === 'procurementManagerId' || columnKey === 'startDate' || columnKey === 'allocatedBudget') ? (
-                  <TableCell>
-                    {columnKey === 'procurementManagerId' && row.procurementManagerId === null && <h1 className='status-red-style'>empty</h1>}
-                    {columnKey === 'procurementManagerId' && row.procurementManagerId !== null && <h1 className='status-red-style'>{row.procurementManagerId}</h1>}
-                    {columnKey === 'startDate' && row.startDate === null && <h1 className='status-red-style'>empty</h1>}
-                    {columnKey === 'startDate' && row.startDate !== null && <h1>{row.startDate.substring(0, 10)}</h1>}
-                    {columnKey === 'allocatedBudget' && row.allocatedBudget === 0 && <h1 className='status-red-style'>empty</h1>}
-                    {columnKey === 'allocatedBudget' && row.allocatedBudget !== 0 && <h1>LKR {row.allocatedBudget.toFixed(2)}</h1>}
-                  </TableCell>
-                ) : (
-                  <TableCell>{getKeyValue(row, columnKey)}</TableCell>
-              )}
-          </TableRow>
-        )}
-      </TableBody>
-    </Table>
-
-    {/* DELETE SITE */}
-    <div className='flex justify-between mb-4 mt-6'>
-        <h1 className='font-semibold text-xl text-zinc-900'>DELETE SITE INFO</h1>
+      {/* SITE INFO TABLE */}
+      <div className='flex justify-between mb-4'>
+        <h1 className='font-semibold text-xl text-zinc-900'>SITE INFORMATION</h1>
 
         <section className='flex gap-4'>
-          <Button type="submit" color="default" className='button-style-1' onClick={deleteSiteHandler}
-              startContent={<FontAwesomeIcon icon={faTrash} />}>
-                Delete
+          <Button type="submit" color="default" className='button-style-1' onClick={fetchAllSites}
+              startContent={<FontAwesomeIcon icon={faRetweet} />}>
+                Refetch
           </Button>
-          <Button type="submit" color="default" className='button-style-1' onClick={() => setSiteId("")}
-              startContent={<FontAwesomeIcon icon={faEraser} />}>
-                Clear ID
-          </Button>
+          </section>
+      </div>
+      
+      {/* SITE INFO TABLE */}
+      <Table bottomContent={bottomContent}>
+        <TableHeader>
+          {tableColumns.map((column) =>
+            <TableColumn key={column.key}>{column.label}</TableColumn>
+          )}
+        </TableHeader>
+        <TableBody  emptyContent={" "}
+                    isLoading={isLoading}
+                    loadingContent={<h1>Loading...</h1>}>
+          {sitesData.map((row) =>
+            <TableRow key={row.siteId}>
+              {(columnKey) => (columnKey === 'procurementManagerId' || columnKey === 'startDate' || columnKey === 'allocatedBudget') ? (
+                    <TableCell>
+                      {columnKey === 'procurementManagerId' && row.procurementManagerId === null && <h1 className='status-red-style'>empty</h1>}
+                      {columnKey === 'procurementManagerId' && row.procurementManagerId !== null && <h1 className='status-red-style'>{row.procurementManagerId}</h1>}
+                      {columnKey === 'startDate' && row.startDate === null && <h1 className='status-red-style'>empty</h1>}
+                      {columnKey === 'startDate' && row.startDate !== null && <h1>{row.startDate.substring(0, 10)}</h1>}
+                      {columnKey === 'allocatedBudget' && row.allocatedBudget === 0 && <h1 className='status-red-style'>empty</h1>}
+                      {columnKey === 'allocatedBudget' && row.allocatedBudget !== 0 && <h1>LKR {row.allocatedBudget.toFixed(2)}</h1>}
+                    </TableCell>
+                  ) : (
+                    <TableCell>{getKeyValue(row, columnKey)}</TableCell>
+                )}
+            </TableRow>
+          )}
+        </TableBody>
+      </Table>
+
+      {/* DELETE SITE */}
+      <div className='flex justify-between mb-4 mt-6'>
+          <h1 className='font-semibold text-xl text-zinc-900'>DELETE SITE INFO</h1>
+
+          <section className='flex gap-4'>
+            <Button type="submit" color="default" className='button-style-1' onClick={deleteSiteHandler}
+                startContent={<FontAwesomeIcon icon={faTrash} />}>
+                  Delete
+            </Button>
+            <Button type="submit" color="default" className='button-style-1' onClick={() => setSiteId("")}
+                startContent={<FontAwesomeIcon icon={faEraser} />}>
+                  Clear ID
+            </Button>
           </section>
       </div>
 
