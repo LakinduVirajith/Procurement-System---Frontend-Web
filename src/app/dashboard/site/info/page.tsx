@@ -129,11 +129,14 @@ export default function SiteInfo() {
                   loadingContent={<h1>Loading...</h1>}>
         {sitesData.map((row) =>
           <TableRow key={row.siteId}>
-            {(columnKey) => (columnKey === 'procurementManagerId' || columnKey === 'startDate') ? (
+            {(columnKey) => (columnKey === 'procurementManagerId' || columnKey === 'startDate' || columnKey === 'allocatedBudget') ? (
                   <TableCell>
-                    {columnKey === 'procurementManagerId' && row.procurementManagerId === null && <h1 className='status-red-style'>null</h1>}
+                    {columnKey === 'procurementManagerId' && row.procurementManagerId === null && <h1 className='status-red-style'>empty</h1>}
                     {columnKey === 'procurementManagerId' && row.procurementManagerId !== null && <h1 className='status-red-style'>{row.procurementManagerId}</h1>}
-                    {columnKey === 'startDate' && <h1>{row.startDate.substring(0, 10)}</h1>}
+                    {columnKey === 'startDate' && row.startDate === null && <h1 className='status-red-style'>empty</h1>}
+                    {columnKey === 'startDate' && row.startDate !== null && <h1>{row.startDate.substring(0, 10)}</h1>}
+                    {columnKey === 'allocatedBudget' && row.allocatedBudget === 0 && <h1 className='status-red-style'>empty</h1>}
+                    {columnKey === 'allocatedBudget' && row.allocatedBudget !== 0 && <h1>LKR {row.allocatedBudget.toFixed(2)}</h1>}
                   </TableCell>
                 ) : (
                   <TableCell>{getKeyValue(row, columnKey)}</TableCell>
