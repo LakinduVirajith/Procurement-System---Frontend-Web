@@ -9,6 +9,7 @@ import { getAccessToken } from '@/lib/tokenService'
 import { getAllSitesInfoAction } from '@/server/_getAllSitesInfoAction'
 import { Button, Input } from '@nextui-org/react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination } from '@nextui-org/react'
+import { deleteSiteAction } from '@/server/_deleteSiteAction';
 
 export default function SiteInfo() {
   /* GET ALL SITES */
@@ -83,10 +84,22 @@ export default function SiteInfo() {
   /* FORM FIELDS */
   const [siteId, setSiteId] = React.useState<string>("");
 
-  /* UPDATE USER STATUS */
+  /* DELETE SITE HANDLE */
   async function deleteSiteHandler(){
     if(siteId === "") toast.error("400: site id is required")
     else {
+      const response = await deleteSiteAction(siteId, getAccessToken())
+
+      if (response.statusCode === 200) {
+        setSiteId("")
+        fetchAllSites()
+        toast.success(response.message);
+      }
+      else if(Number.isInteger(response.status)){
+        toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      } else {
+        toast.error(response.statusCode + ": " + response.message);
+      }
     }
   }
 

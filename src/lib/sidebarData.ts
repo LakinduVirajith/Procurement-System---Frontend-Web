@@ -16,9 +16,9 @@ export const sidebarData = [
       icon: faBuilding,
       label: 'SITE',
       submenu: [
+        { label: 'SITE INFORMATIONS', route: '/dashboard/site/info' },
         { label: 'CREATE SITE', route: '/dashboard/site/create' },
         { label: 'UPDATE SITE', route: '/dashboard/site/update' },
-        { label: 'SITE INFORMATIONS', route: '/dashboard/site/info' },
       ],
     },
     {
