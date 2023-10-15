@@ -1,11 +1,11 @@
 'use client'
-import { getUserRole } from "@/lib/tokenService"
-import { useRouter } from "next/navigation"
-import toast from "react-hot-toast";
+import { getUserRole } from '@/services/tokenService'
+import { useRouter } from 'next/navigation'
+import toast from 'react-hot-toast'
 
 const userData = {
   userRole: getUserRole(),
-};
+}
 
 export default function Dashboard() {
   const router = useRouter()

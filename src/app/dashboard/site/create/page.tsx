@@ -2,9 +2,9 @@
 'use client'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken, getUserRole } from '@/lib/tokenService'
+import { getToken, getUserRole } from '@/services/tokenService'
 import { createSiteSchema } from '@/validation/createSiteSchema'
-import { createSiteAction } from '@/server/_createSiteAction'
+import { createSiteAction } from '@/server/site/_createSiteAction'
 import { Button, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp, faEraser } from '@fortawesome/free-solid-svg-icons'
@@ -25,40 +25,40 @@ export default function CreateSite() {
     startDate: "", contactNumber: "",
     allocatedBudget: 0, siteManagerId: "",
     procurementManagerId: ""
-  });
+  })
 
   /* ZOD VALIDATION */
-  const [zodErrors, setZodErrors] = React.useState<any[]>([]);
+  const [zodErrors, setZodErrors] = React.useState<any[]>([])
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setZodErrors([]); 
+    e.preventDefault()
+    setZodErrors([]) 
 
     try {
-      createSiteSchema.parse(formData);
+      createSiteSchema.parse(formData)
     } catch (error: any) {
       toast.error("400: " + error.errors[0].message)
       setZodErrors(error.errors)
     }
-  };
+  }
 
   /* FORM SUBMISSION */
   React.useEffect(() => {    
     if (zodErrors.length === 0 && formData.siteName !== '') {
       submitForm()
     }
-  }, [zodErrors]);
+  }, [zodErrors])
 
   async function submitForm(){
-    const response: ResponseMessage = await createSiteAction(formData, getAccessToken())
+    const response: ResponseMessage = await createSiteAction(formData, await getToken())
     
     if (response.statusCode === 200) {
       clearForm()
-      toast.success(response.message);
+      toast.success(response.message)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
@@ -69,9 +69,9 @@ export default function CreateSite() {
       startDate: "", contactNumber: "",
       allocatedBudget: 0, siteManagerId: "",
       procurementManagerId: "",
-    });
-    setZodErrors([]);
-  };
+    })
+    setZodErrors([])
+  }
 
   return (
     <form onSubmit={handleSubmit} className='dashboard-style'>

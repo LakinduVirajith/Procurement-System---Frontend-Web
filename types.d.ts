@@ -1,6 +1,17 @@
+type SideNav = {
+  menu: string;
+  icon: IconDefinition;
+  label: string;
+  access: string;
+  submenu: {
+        label: string;
+        route: string;
+  }[]
+}[]
+
 type AuthenticationRequest = {
-    email: string,
-    password: string
+  email: string,
+  password: string
 }
 
 type AuthenticationResponse = {

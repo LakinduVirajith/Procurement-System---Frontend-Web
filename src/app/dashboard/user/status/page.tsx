@@ -2,15 +2,15 @@
 'use client'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken, getUserRole } from '@/lib/tokenService'
-import { getAllUsersAction } from '@/server/_getAllUsersAction'
+import { getToken, getUserRole } from '@/services/tokenService'
+import { getAllUsersAction } from '@/server/user/_getAllUsersAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRetweet, faPen, faEraser } from '@fortawesome/free-solid-svg-icons'
 import { Button, Input, Select, SelectItem } from '@nextui-org/react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination } from '@nextui-org/react'
 import { userStatusData, userTableColumns } from '@/lib/userDetailsData'
-import { activateUserAction } from '@/server/_activateUserAction'
-import { deactivateUserAction } from '@/server/_deactivateUserAction'
+import { activateUserAction } from '@/server/user/_activateUserAction'
+import { deactivateUserAction } from '@/server/user/_deactivateUserAction'
 import { useRouter } from 'next/navigation'
 
 export default function UserStatus() {
@@ -23,23 +23,23 @@ export default function UserStatus() {
   }
 
   /* GET ALL USERS */
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true)
   const [pageable, setPageable] = React.useState<Pageable>({
     page: 1, size: 4, sort: ["userId"], totalPages: 1, totalElements: 0
-  });
+  })
   const tableColumns = userTableColumns
   const [usersData, setUsersData] = React.useState<UserDTO[]>([])
   
   React.useEffect(() => {
     fetchAllUsers()
-  }, [pageable.page]);
+  }, [pageable.page])
 
   /* FETCH USERS */
   async function fetchAllUsers(){
     setUsersData([])
     setIsLoading(true)
 
-    const response: any = await getAllUsersAction(pageable, getAccessToken())        
+    const response: any = await getAllUsersAction(pageable, await getToken())        
     
     if(response.content){      
       setUsersData(response.content)
@@ -47,11 +47,11 @@ export default function UserStatus() {
       setIsLoading(false)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       setIsLoading(false)
     } 
     else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
       setIsLoading(false)
     }
   }
@@ -80,20 +80,20 @@ export default function UserStatus() {
           </Button>
         </div>
       </div>
-    );
-  }, [pageable.page, pageable.totalPages, pageable.totalElements]);
+    )
+  }, [pageable.page, pageable.totalPages, pageable.totalElements])
 
   const onNextPage = React.useCallback(() => {
     setPageable({...pageable, page: pageable.page + 1})
-  }, [pageable.page]);
+  }, [pageable.page])
 
   const onPreviousPage = React.useCallback(() => {
     setPageable({...pageable, page: pageable.page - 1})
-  }, [pageable.page]);
+  }, [pageable.page])
 
 
   /* FORM FIELDS */
-  const [userId, setUserId] = React.useState<string>("");
+  const [userId, setUserId] = React.useState<string>("")
   const [userStatus, setUserStatus] = React.useState<string>("")
 
   /* UPDATE USER STATUS */
@@ -109,33 +109,33 @@ export default function UserStatus() {
 
   /* ACTIVATE USER */
   async function activateUser(){
-    const response: ResponseMessage = await activateUserAction(userId, getAccessToken())
+    const response: ResponseMessage = await activateUserAction(userId, await getToken())
     
     if (response.statusCode === 200) {
       setUserId("")
       fetchAllUsers()
-      toast.success(response.message);
+      toast.success(response.message)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
   /* DEACTIVATE USER */
   async function deactivateUser(){
-    const response: ResponseMessage = await deactivateUserAction(userId, getAccessToken())
+    const response: ResponseMessage = await deactivateUserAction(userId, await getToken())
     
     if (response.statusCode === 200) {
       setUserId("")
       fetchAllUsers()
-      toast.success(response.message);
+      toast.success(response.message)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 

@@ -2,13 +2,13 @@
 'use client'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken, getUserRole } from '@/lib/tokenService'
+import { getToken, getUserRole } from '@/services/tokenService'
 import { createSiteSchema } from '@/validation/createSiteSchema'
 import { Button, Divider, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faEraser, faPen } from '@fortawesome/free-solid-svg-icons'
-import { getSiteInfoAction } from '@/server/_getSiteInfoAction'
-import { updateSiteAction } from '@/server/_updateSiteAction'
+import { getSiteInfoAction } from '@/server/site/_getSiteInfoAction'
+import { updateSiteAction } from '@/server/site/_updateSiteAction'
 import { useRouter } from 'next/navigation'
 
 export default function UpdateSite() {
@@ -25,10 +25,10 @@ export default function UpdateSite() {
     location: "", startDate: "", 
     contactNumber: "", allocatedBudget: 0, 
     siteManagerId: "", procurementManagerId: "",
-  };
+  }
 
   /* FORM FIELDS */
-  const [formData, setFormData] = React.useState<SiteDTO>(initialFormData);
+  const [formData, setFormData] = React.useState<SiteDTO>(initialFormData)
   const [fetched, setFetched] = React.useState(false)
 
   /* FETCH SITE INFO */
@@ -36,7 +36,7 @@ export default function UpdateSite() {
     if(formData.siteId === ""){
       toast.error("400: site id is required")
     }else if(formData.siteId !== undefined && formData.siteId !== ""){
-      const response = await getSiteInfoAction(formData.siteId, getAccessToken())
+      const response = await getSiteInfoAction(formData.siteId, await getToken())
       
       if(!response.statusCode){
         let updatedFormData = {
@@ -48,64 +48,64 @@ export default function UpdateSite() {
           allocatedBudget: response.allocatedBudget,
           siteManagerId: response.siteManagerId.toString(),
           procurementManagerId: response.procurementManagerId
-        };  
-        if (response.startDate === null) updatedFormData.startDate = "";
-        if (response.procurementManagerId === null) updatedFormData.procurementManagerId = "";
+        }  
+        if (response.startDate === null) updatedFormData.startDate = ""
+        if (response.procurementManagerId === null) updatedFormData.procurementManagerId = ""
         if(response.procurementManagerId !== null) updatedFormData.procurementManagerId.toString()
-        setFormData(updatedFormData);
+        setFormData(updatedFormData)
         setFetched(true)
       }else if(Number.isInteger(response.status)){
-        toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+        toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       } else {
-        toast.error(response.statusCode + ": " + response.message);
+        toast.error(response.statusCode + ": " + response.message)
       }
     }
   }
 
   /* ZOD VALIDATION */
-  const [zodErrors, setZodErrors] = React.useState<any[]>([]);
+  const [zodErrors, setZodErrors] = React.useState<any[]>([])
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setZodErrors([]); 
+    e.preventDefault()
+    setZodErrors([]) 
 
     if(formData.siteId === ""){
       toast.error("400: site id is required")
     }else{
       try {
-        createSiteSchema.parse(formData);
+        createSiteSchema.parse(formData)
       } catch (error: any) {
         toast.error("400: " + error.errors[0].message)
         setZodErrors(error.errors)
       }
     }
-  };
+  }
 
   /* FORM SUBMISSION */
   React.useEffect(() => {    
     if (zodErrors.length === 0 && formData.siteId !== '') {
       submitForm()
     }
-  }, [zodErrors]);
+  }, [zodErrors])
 
   async function submitForm(){
-    const response: ResponseMessage = await updateSiteAction(formData, getAccessToken())
+    const response: ResponseMessage = await updateSiteAction(formData, await getToken())
     
     if (response.statusCode === 200) {
       clearForm()
-      toast.success(response.message);
+      toast.success(response.message)
     }else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
   /* FORM DATA CLEAR */
   const clearForm = () => {
-    setFormData(initialFormData);
-    setZodErrors([]);
+    setFormData(initialFormData)
+    setZodErrors([])
     setFetched(false)
-  };
+  }
 
   return (
     <div className='dashboard-style'>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken, validateAccessToken, validateRefreshToken } from "@/lib/tokenService";
-import { tokenAction } from "@/server/_tokenAction";
+import { getAccessToken, getRefreshToken, setAccessToken, setRefreshToken, validateAccessToken, validateRefreshToken } from "@/services/tokenService";
+import { refreshTokenAction } from "./server/_refreshTokenAction";
 
 export async function middlewareAuth(request: NextRequest) {
     
@@ -8,7 +8,7 @@ export async function middlewareAuth(request: NextRequest) {
         
         const refreshToken = getRefreshToken()
         if(refreshToken){
-            const response: AuthenticationResponse = await tokenAction(refreshToken);
+            const response: AuthenticationResponse = await refreshTokenAction(refreshToken);
 
             if (response.statusCode === 200) {
                 if(response.accessToken)
