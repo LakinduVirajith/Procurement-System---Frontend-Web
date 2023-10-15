@@ -2,7 +2,7 @@
 'use client'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken } from '@/lib/tokenService'
+import { getAccessToken, getUserRole } from '@/lib/tokenService'
 import { getAllUsersAction } from '@/server/_getAllUsersAction'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRetweet, faPen, faEraser } from '@fortawesome/free-solid-svg-icons'
@@ -11,8 +11,17 @@ import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKey
 import { userStatusData, userTableColumns } from '@/lib/userDetailsData'
 import { activateUserAction } from '@/server/_activateUserAction'
 import { deactivateUserAction } from '@/server/_deactivateUserAction'
+import { useRouter } from 'next/navigation'
 
 export default function UserStatus() {
+  const router = useRouter()
+
+  /* UNAUTHORIZED */
+  if(getUserRole() !== 'ADMIN'){
+    toast.error('403: You are not authorized to access')
+    router.push('/dashboard/procurement/approval')
+  }
+
   /* GET ALL USERS */
   const [isLoading, setIsLoading] = React.useState(true);
   const [pageable, setPageable] = React.useState<Pageable>({
