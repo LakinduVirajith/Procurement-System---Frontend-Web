@@ -26,6 +26,12 @@ h1, h2, h3, h4, h5, h6{
 .button-style-1{
     @apply !bg-zinc-900 !text-white !rounded-lg
 }
+.button-style-2{
+    @apply !bg-green-700 !text-white !rounded-lg
+}
+.button-style-3{
+    @apply !bg-red-700 !text-white !rounded-lg
+}
 
 /* MENU STYLE */
 .menu-style{

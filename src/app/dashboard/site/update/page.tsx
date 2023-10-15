@@ -2,15 +2,24 @@
 'use client'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken } from '@/lib/tokenService'
+import { getAccessToken, getUserRole } from '@/lib/tokenService'
 import { createSiteSchema } from '@/validation/createSiteSchema'
 import { Button, Divider, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faDownload, faEraser, faPen } from '@fortawesome/free-solid-svg-icons'
 import { getSiteInfoAction } from '@/server/_getSiteInfoAction'
 import { updateSiteAction } from '@/server/_updateSiteAction'
+import { useRouter } from 'next/navigation'
 
 export default function UpdateSite() {
+  const router = useRouter()
+
+  /* UNAUTHORIZED */
+  if(getUserRole() !== 'ADMIN'){
+    toast.error('403: You are not authorized to access')
+    router.push('/dashboard/procurement/approval')
+  }
+
   const initialFormData = {
     siteId: "", siteName: "", 
     location: "", startDate: "", 
@@ -84,8 +93,7 @@ export default function UpdateSite() {
     if (response.statusCode === 200) {
       clearForm()
       toast.success(response.message);
-    }
-    else if(Number.isInteger(response.status)){
+    }else if(Number.isInteger(response.status)){
       toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
     } else {
       toast.error(response.statusCode + ": " + response.message);

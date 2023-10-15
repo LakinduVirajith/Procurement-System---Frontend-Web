@@ -2,14 +2,23 @@
 'use client'
 import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken } from '@/lib/tokenService'
+import { getAccessToken, getUserRole } from '@/lib/tokenService'
 import { createSiteSchema } from '@/validation/createSiteSchema'
 import { createSiteAction } from '@/server/_createSiteAction'
-import { Button, Card, CardBody, Divider, Input } from '@nextui-org/react'
+import { Button, Input } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCloudArrowUp, faEraser } from '@fortawesome/free-solid-svg-icons'
+import { useRouter } from 'next/navigation'
 
 export default function CreateSite() {
+  const router = useRouter()
+
+  /* UNAUTHORIZED */
+  if(getUserRole() !== 'ADMIN'){
+    toast.error('403: You are not authorized to access')
+    router.push('/dashboard/procurement/approval')
+  }
+
   /* FORM FIELDS */
   const [formData, setFormData] = React.useState<SiteDTO>({
     siteName: "", location: "",

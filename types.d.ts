@@ -56,6 +56,23 @@ type SiteDTO = {
   procurementManagerId: string;
 }
 
+type OrderDTO = {
+  orderId: number,
+  status: string,
+  requiredDate: string,
+  items: [
+    {
+      orderItemId: number,
+      quantity: number,
+      status: string,
+      itemId: number,
+      orderId: number
+    }
+  ],
+  supplierId: number,
+  siteId: number
+}
+
 type Pageable = {
   page: number,
   size: number,

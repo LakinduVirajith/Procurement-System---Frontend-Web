@@ -5,13 +5,22 @@ import toast from 'react-hot-toast';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRetweet, faTrash, faEraser } from '@fortawesome/free-solid-svg-icons'
 import { siteTableColumns } from '@/lib/siteDetailsData'
-import { getAccessToken } from '@/lib/tokenService'
+import { getAccessToken, getUserRole } from '@/lib/tokenService'
 import { getAllSitesInfoAction } from '@/server/_getAllSitesInfoAction'
 import { Button, Input } from '@nextui-org/react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination } from '@nextui-org/react'
 import { deleteSiteAction } from '@/server/_deleteSiteAction';
+import { useRouter } from 'next/navigation';
 
 export default function SiteInfo() {
+  const router = useRouter()
+
+  /* UNAUTHORIZED */
+  if(getUserRole() !== 'ADMIN'){
+    toast.error('403: You are not authorized to access')
+    router.push('/dashboard/procurement/approval')
+  }
+
   /* GET ALL SITES */
   const [isLoading, setIsLoading] = React.useState(true);
   const [pageable, setPageable] = React.useState<Pageable>({
@@ -110,7 +119,7 @@ export default function SiteInfo() {
         <h1 className='font-semibold text-xl text-zinc-900'>SITE INFORMATION</h1>
 
         <section className='flex gap-4'>
-          <Button type="submit" color="default" className='button-style-1' onClick={fetchAllSites}
+          <Button type="button" color="default" className='button-style-1' onClick={fetchAllSites}
               startContent={<FontAwesomeIcon icon={faRetweet} />}>
                 Refetch
           </Button>
@@ -132,7 +141,7 @@ export default function SiteInfo() {
               {(columnKey) => (columnKey === 'procurementManagerId' || columnKey === 'startDate' || columnKey === 'allocatedBudget') ? (
                     <TableCell>
                       {columnKey === 'procurementManagerId' && row.procurementManagerId === null && <h1 className='status-red-style'>empty</h1>}
-                      {columnKey === 'procurementManagerId' && row.procurementManagerId !== null && <h1 className='status-red-style'>{row.procurementManagerId}</h1>}
+                      {columnKey === 'procurementManagerId' && row.procurementManagerId !== null && <h1>{row.procurementManagerId}</h1>}
                       {columnKey === 'startDate' && row.startDate === null && <h1 className='status-red-style'>empty</h1>}
                       {columnKey === 'startDate' && row.startDate !== null && <h1>{row.startDate.substring(0, 10)}</h1>}
                       {columnKey === 'allocatedBudget' && row.allocatedBudget === 0 && <h1 className='status-red-style'>empty</h1>}
