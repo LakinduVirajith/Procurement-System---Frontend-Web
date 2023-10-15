@@ -1,15 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { getAccessToken, getUserRole } from '@/lib/tokenService';
-import { supplierTableColumns } from '@/lib/userDetailsData';
-import { assignSupplierAction } from '@/server/_assignSupplierAction';
-import { getSuppliersAction } from '@/server/_getSuppliersAction';
-import { faEraser, faPlus, faRetweet } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Input, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import toast from 'react-hot-toast';
+import { getToken, getUserRole } from '@/services/tokenService'
+import { supplierTableColumns } from '@/lib/userDetailsData'
+import { assignSupplierAction } from '@/server/order/_assignSupplierAction'
+import { getSuppliersAction } from '@/server/order/_getSuppliersAction'
+import { faEraser, faPlus, faRetweet } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, Input, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react'
+import { useRouter } from 'next/navigation'
+import React from 'react'
+import toast from 'react-hot-toast'
 
 export default function AssignSupplier() {
   const router = useRouter()
@@ -20,7 +20,7 @@ export default function AssignSupplier() {
     router.push('/dashboard/user/create')
   }
 
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true)
   const [suppliersData, setSuppliersData] = React.useState<UserDTO[]>([])
   const [page, setPage] = React.useState(1)
   const [pageSize, setPageSize] = React.useState(10)
@@ -29,24 +29,24 @@ export default function AssignSupplier() {
 
   React.useEffect(() => {
     fetchAllSuppliers()
-  }, []);
+  }, [])
 
   /* FETCH SUPPLIERS */
   async function fetchAllSuppliers(){
     setSuppliersData([])
     setIsLoading(true)
 
-    const response: any = await getSuppliersAction(getAccessToken())    
+    const response: any = await getSuppliersAction(await getToken())    
     
     if(!response.statusCode){      
       setSuppliersData(response)
       setIsLoading(false)
       setTotalPages(Math.ceil(response.length / pageSize))
     }else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       setIsLoading(false)
     }else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
       setIsLoading(false)
     }
   }
@@ -75,39 +75,39 @@ export default function AssignSupplier() {
           </Button>
         </div>
       </div>
-    );
-  }, [suppliersData.length, page, pageSize]);
+    )
+  }, [suppliersData.length, page, pageSize])
 
   const onNextPage = React.useCallback(() => {
     setPage(page + 1)
-  }, [page]);
+  }, [page])
 
   const onPreviousPage = React.useCallback(() => {
     setPage(page - 1)
-  }, [page]);
+  }, [page])
 
   /* ASSIGN SUPPLIER FORM FIELDS */
   const [formData, setFormData] = React.useState<AssignSupplier>({
     orderId: "", supplierId: "", 
-  });
+  })
 
   /* ASSIGN SUPPLIER HANDLE */
   const assignSupplierHandler = async (e: React.FormEvent<HTMLFormElement>) => {    
-    e.preventDefault();
+    e.preventDefault()
 
     if(formData.orderId === ""){
       toast.error("400: order id is required")
     }else if(formData.supplierId === ""){
       toast.error("400: supplier Id is required")
     }else{
-      const response = await assignSupplierAction(formData, getAccessToken())
+      const response = await assignSupplierAction(formData, await getToken())
 
       if (response.statusCode === 200) {
-        toast.success(response.message);
+        toast.success(response.message)
       }else if(Number.isInteger(response.status)){
-        toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+        toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       } else {
-        toast.error(response.statusCode + ": " + response.message);
+        toast.error(response.statusCode + ": " + response.message)
       }
     }
   }
@@ -116,8 +116,8 @@ export default function AssignSupplier() {
   const clearForm = () => {
     setFormData({
       orderId: "", supplierId: ""
-    });
-  };
+    })
+  }
 
   return (
     <div className='dashboard-style'>

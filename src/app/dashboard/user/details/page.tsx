@@ -1,19 +1,18 @@
-'use client'
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from 'react'
+'use client'
+import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken, getUserRole } from '@/lib/tokenService'
+import { getToken, getUserRole } from '@/services/tokenService'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faKey, faUserPlus, faUserMinus, faEraser } from '@fortawesome/free-solid-svg-icons'
-import {Input} from '@nextui-org/react'
-import { Button } from '@nextui-org/react'
+import { Input, Button } from '@nextui-org/react'
 import { resetPasswordSchema } from '@/validation/resetPasswordSchema'
-import { resetPasswordAction } from '@/server/_resetPassowrdAction'
+import { resetPasswordAction } from '@/server/user/_resetPassowrdAction'
 import { allocateSiteSchema } from '@/validation/allocateSiteSchema'
-import { allocateSiteAction } from '@/server/_allocateSiteAction'
+import { allocateSiteAction } from '@/server/site/_allocateSiteAction'
 import { deallocateSiteSchema } from '@/validation/deallocateSiteSchema'
-import { deallocateSiteAction } from '@/server/_deallocateSiteAction'
+import { deallocateSiteAction } from '@/server/site/_deallocateSiteAction'
 
 export default function CreateDetails() {
   const router = useRouter()
@@ -31,37 +30,37 @@ export default function CreateDetails() {
   /* RESET FORM FIELDS */
   const [resetFormData, setResetFormData] = React.useState<ResetPassword>({
     email: "", password: "", 
-  });
+  })
 
   /* RESET ZOD VALIDATION */
-  const [zodResetErrors, setResetZodErrors] = React.useState<any[]>([]);
+  const [zodResetErrors, setResetZodErrors] = React.useState<any[]>([])
   const handleResetSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
-    e.preventDefault();
-    setResetZodErrors([]); 
+    e.preventDefault()
+    setResetZodErrors([]) 
 
     try {
-      resetPasswordSchema.parse(resetFormData);
+      resetPasswordSchema.parse(resetFormData)
     } catch (error: any) {
       setResetZodErrors(error.errors)
       toast.error("400: " + error.errors[0].message)
     }
-  };
+  }
 
   /* RESET FORM SUBMISSION */
-  useEffect(() => {    
+  React.useEffect(() => {    
     if (zodResetErrors.length === 0 && resetFormData.email !== '') {
       submitResetForm()
     }
-  }, [zodResetErrors]);
+  }, [zodResetErrors])
 
   async function submitResetForm(){
-    const response: ResponseMessage = await resetPasswordAction(resetFormData, getAccessToken())
+    const response: ResponseMessage = await resetPasswordAction(resetFormData, await getToken())
     
     if (response.statusCode === 200) {
       clearResetForm()
-      toast.success(response.message);
+      toast.success(response.message)
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
@@ -69,49 +68,49 @@ export default function CreateDetails() {
   const clearResetForm = () => {
     setResetFormData({
       email: "", password: ""
-    });
-    setResetZodErrors([]);
-  };
+    })
+    setResetZodErrors([])
+  }
 
   /* ALLOCATE FORM FIELDS */
   const [allocateFormData, setAllocateFormData] = React.useState<AllocateSite>({
     siteId: "", userEmail: "", 
-  });
+  })
 
   
   /* ALLOCATE ZOD VALIDATION */
-  const [zodAllocateErrors, setAllocateZodErrors] = React.useState<any[]>([]);
+  const [zodAllocateErrors, setAllocateZodErrors] = React.useState<any[]>([])
   const handleAllocateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
-    e.preventDefault();
-    setAllocateZodErrors([]); 
+    e.preventDefault()
+    setAllocateZodErrors([]) 
 
     try {
-      allocateSiteSchema.parse(allocateFormData);
+      allocateSiteSchema.parse(allocateFormData)
     } catch (error: any) {      
       setAllocateZodErrors(error.errors)
       toast.error("400: " + error.errors[0].message)
     }
-  };
+  }
 
   /* ALLOCATE FORM SUBMISSION */
-  useEffect(() => {    
+  React.useEffect(() => {    
     if (zodAllocateErrors.length === 0 && allocateFormData.siteId !== '') {
       submitAllocateForm()
     }
-  }, [zodAllocateErrors]);
+  }, [zodAllocateErrors])
 
   async function submitAllocateForm(){
-    const response: ResponseMessage = await allocateSiteAction(allocateFormData, getAccessToken())
+    const response: ResponseMessage = await allocateSiteAction(allocateFormData, await getToken())
     
     if (response.statusCode === 200) {
       clearAllocateForm()
-      toast.success(response.message);
+      toast.success(response.message)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     }
     else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
@@ -119,49 +118,49 @@ export default function CreateDetails() {
   const clearAllocateForm = () => {
     setAllocateFormData({
       siteId: "", userEmail: ""
-    });
-    setAllocateZodErrors([]);
-  };
+    })
+    setAllocateZodErrors([])
+  }
 
   /* DEALLOCATE FORM FIELDS */
   const [deallocateFormData, setDeallocateFormData] = React.useState<DeallocateSite>({
     siteId: "", userEmail: "", 
-  });
+  })
 
   
   /* DEALLOCATE ZOD VALIDATION */
-  const [zodDeallocateErrors, setDeallocateZodErrors] = React.useState<any[]>([]);
+  const [zodDeallocateErrors, setDeallocateZodErrors] = React.useState<any[]>([])
   const handleDeallocateSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
-    e.preventDefault();
-    setDeallocateZodErrors([]); 
+    e.preventDefault()
+    setDeallocateZodErrors([]) 
 
     try {
-      deallocateSiteSchema.parse(deallocateFormData);
+      deallocateSiteSchema.parse(deallocateFormData)
     } catch (error: any) {      
       setDeallocateZodErrors(error.errors)
       toast.error("400: " + error.errors[0].message)
     }
-  };
+  }
 
   /* DEALLOCATE FORM SUBMISSION */
-  useEffect(() => {    
+  React.useEffect(() => {    
     if (zodDeallocateErrors.length === 0 && deallocateFormData.siteId !== '') {
       submitDeallocateForm()
     }
-  }, [zodDeallocateErrors]);
+  }, [zodDeallocateErrors])
 
   async function submitDeallocateForm(){
-    const response: ResponseMessage = await deallocateSiteAction(deallocateFormData, getAccessToken())
+    const response: ResponseMessage = await deallocateSiteAction(deallocateFormData, await getToken())
     
     if (response.statusCode === 200) {
       clearDeallocateForm()
-      toast.success(response.message);
+      toast.success(response.message)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     }
     else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
@@ -169,9 +168,9 @@ export default function CreateDetails() {
   const clearDeallocateForm = () => {
     setDeallocateFormData({
       siteId: "", userEmail: ""
-    });
-    setDeallocateZodErrors([]);
-  };
+    })
+    setDeallocateZodErrors([])
+  }
 
   return (
     <div className='dashboard-style'>

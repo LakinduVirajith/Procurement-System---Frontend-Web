@@ -1,17 +1,15 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import React, { useEffect } from 'react'
+import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken, getUserRole } from '@/lib/tokenService'
+import { getToken, getUserRole } from '@/services/tokenService'
 import { useRouter } from 'next/navigation'
-import {Input} from '@nextui-org/react'
-import {Select, SelectItem} from '@nextui-org/react'
-import {Button} from '@nextui-org/react'
+import { Input, Button, Select, SelectItem } from '@nextui-org/react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faEye, faEyeSlash, faCloudArrowUp, faEraser } from '@fortawesome/free-solid-svg-icons'
-import { userRoleData, isActiveData } from "../../../../lib/loginEnumData"
+import { userRoleData, isActiveData } from "../../../../lib/userEnumData"
 import { createUserSchema } from '@/validation/createUserSchema'
-import { createUserAction } from '@/server/_createUserAction'
+import { createUserAction } from '@/server/user/_createUserAction'
 
 export default function UserCreate() {
   const router = useRouter()
@@ -28,43 +26,43 @@ export default function UserCreate() {
     email: "", mobileNumber: "",
     password: "", role: "",
     isActive: "",
-  });
+  })
 
   /* PASSWORD VISIBILITY */
   const [isVisible, setIsVisible] = React.useState(false)
   const toggleVisibility = () => setIsVisible(!isVisible)
 
   /* ZOD VALIDATION */
-  const [zodErrors, setZodErrors] = React.useState<any[]>([]);
+  const [zodErrors, setZodErrors] = React.useState<any[]>([])
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {    
-    e.preventDefault();
-    setZodErrors([]); 
+    e.preventDefault()
+    setZodErrors([])
 
     try {
-      createUserSchema.parse(formData);
+      createUserSchema.parse(formData)
     } catch (error: any) {
       setZodErrors(error.errors)
     }
-  };
+  }
 
   /* FORM SUBMISSION */
-  useEffect(() => {    
+  React.useEffect(() => {    
     if (zodErrors.length === 0 && formData.firstName !== '') {
       submitForm()
     }
-  }, [zodErrors]);
+  }, [zodErrors])
 
   async function submitForm(){
-    const response: ResponseMessage = await createUserAction(formData, getAccessToken())
+    const response: ResponseMessage = await createUserAction(formData, await getToken())
     
     if (response.statusCode === 200) {
       clearForm()
-      toast.success(response.message);
+      toast.success(response.message)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
@@ -75,9 +73,9 @@ export default function UserCreate() {
       email: "", mobileNumber: "",
       password: "", role: "",
       isActive: "",
-    });
-    setZodErrors([]);
-  };
+    })
+    setZodErrors([])
+  }
 
   return (
     <form onSubmit={handleSubmit} className='dashboard-style'>

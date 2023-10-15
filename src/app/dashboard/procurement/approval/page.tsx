@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
-import { orderTableColumns } from '@/lib/orderDetailsData';
-import { getAccessToken, getUserRole } from '@/lib/tokenService';
-import { getAllOrdersAction } from '@/server/_getAllOrdersAction';
-import { orderApprovedAction } from '@/server/_orderApprovedAction';
-import { orderCancelledAction } from '@/server/_orderCancelledAction';
-import { faCheck, faRetweet, faXmark } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { Button, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react';
-import { useRouter } from 'next/navigation';
-import React from 'react';
-import toast from 'react-hot-toast';
+import { orderTableColumns } from '@/lib/orderDetailsData'
+import { getToken, getUserRole } from '@/services/tokenService'
+import { getAllOrdersAction } from '@/server/order/_getAllOrdersAction'
+import { orderApprovedAction } from '@/server/order/_orderApprovedAction'
+import { orderCancelledAction } from '@/server/order/_orderCancelledAction'
+import { faCheck, faRetweet, faXmark } from '@fortawesome/free-solid-svg-icons'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { Button, Pagination, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow, getKeyValue } from '@nextui-org/react'
+import { useRouter } from 'next/navigation'
+import React from 'react'
+import toast from 'react-hot-toast'
 
 export default function OrderApproval() {
   const router = useRouter()
@@ -21,7 +21,7 @@ export default function OrderApproval() {
     router.push('/dashboard/user/create')
   }
 
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true)
   const [ordersData, setOrdersData] = React.useState<OrderDTO[]>([])
   const [page, setPage] = React.useState(1)
   const [pageSize, setPageSize] = React.useState(10)
@@ -30,24 +30,24 @@ export default function OrderApproval() {
 
   React.useEffect(() => {
     fetchAllOrders()
-  }, []);
+  }, [])
 
   /* FETCH SITES */
   async function fetchAllOrders(){
     setOrdersData([])
     setIsLoading(true)
 
-    const response: any = await getAllOrdersAction(getAccessToken())    
+    const response: any = await getAllOrdersAction(await getToken())    
     
     if(!response.statusCode){      
       setOrdersData(response)
       setIsLoading(false)
       setTotalPages(Math.ceil(response.length / pageSize))
     }else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       setIsLoading(false)
     }else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
       setIsLoading(false)
     }
   }
@@ -76,44 +76,44 @@ export default function OrderApproval() {
           </Button>
         </div>
       </div>
-    );
-  }, [ordersData.length, page, pageSize]);
+    )
+  }, [ordersData.length, page, pageSize])
 
   const onNextPage = React.useCallback(() => {
     setPage(page + 1)
-  }, [page]);
+  }, [page])
 
   const onPreviousPage = React.useCallback(() => {
     setPage(page - 1)
-  }, [page]);
+  }, [page])
 
   /* ORDER APPROVED HANDLE */
   async function ordersApprovedHandler(orderId: number) {
-    const response = await orderApprovedAction(orderId, getAccessToken())
+    const response = await orderApprovedAction(orderId, await getToken())
 
     if (response.statusCode === 200) {
-      toast.success(response.message);
-      fetchAllOrders();
+      toast.success(response.message)
+      fetchAllOrders()
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }
 
   /* ORDER CANCELLED HANDLE */
   async function ordersCancelledHandler(orderId: number) {
-    const response = await orderCancelledAction(orderId, getAccessToken())
+    const response = await orderCancelledAction(orderId, await getToken())
 
     if (response.statusCode === 200) {
-      toast.success(response.message);
-      fetchAllOrders();
+      toast.success(response.message)
+      fetchAllOrders()
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
     } else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
     }
   }  
 

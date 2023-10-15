@@ -1,16 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 'use client'
 import React from 'react'
-import toast from 'react-hot-toast';
+import toast from 'react-hot-toast'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRetweet, faTrash, faEraser } from '@fortawesome/free-solid-svg-icons'
 import { siteTableColumns } from '@/lib/siteDetailsData'
-import { getAccessToken, getUserRole } from '@/lib/tokenService'
-import { getAllSitesInfoAction } from '@/server/_getAllSitesInfoAction'
+import { getToken, getUserRole } from '@/services/tokenService'
+import { getAllSitesInfoAction } from '@/server/site/_getAllSitesInfoAction'
 import { Button, Input } from '@nextui-org/react'
 import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, getKeyValue, Pagination } from '@nextui-org/react'
-import { deleteSiteAction } from '@/server/_deleteSiteAction';
-import { useRouter } from 'next/navigation';
+import { deleteSiteAction } from '@/server/site/_deleteSiteAction'
+import { useRouter } from 'next/navigation'
 
 export default function SiteInfo() {
   const router = useRouter()
@@ -22,23 +22,23 @@ export default function SiteInfo() {
   }
 
   /* GET ALL SITES */
-  const [isLoading, setIsLoading] = React.useState(true);
+  const [isLoading, setIsLoading] = React.useState(true)
   const [pageable, setPageable] = React.useState<Pageable>({
     page: 1, size: 4, sort: ["siteId"], totalPages: 1, totalElements: 0
-  });
+  })
   const tableColumns = siteTableColumns
   const [sitesData, setSitesData] = React.useState<SiteDTO[]>([])
 
   React.useEffect(() => {
     fetchAllSites()
-  }, [pageable.page]);
+  }, [pageable.page])
 
   /* FETCH SITES */
   async function fetchAllSites(){
     setSitesData([])
     setIsLoading(true)
 
-    const response: any = await getAllSitesInfoAction(pageable, getAccessToken())        
+    const response: any = await getAllSitesInfoAction(pageable, await getToken())        
     
     if(response.content){      
       setSitesData(response.content)
@@ -46,11 +46,11 @@ export default function SiteInfo() {
       setIsLoading(false)
     }
     else if(Number.isInteger(response.status)){
-      toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+      toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       setIsLoading(false)
     } 
     else {
-      toast.error(response.statusCode + ": " + response.message);
+      toast.error(response.statusCode + ": " + response.message)
       setIsLoading(false)
     }
   }
@@ -79,35 +79,35 @@ export default function SiteInfo() {
           </Button>
         </div>
       </div>
-    );
-  }, [pageable.page, pageable.totalPages, pageable.totalElements]);
+    )
+  }, [pageable.page, pageable.totalPages, pageable.totalElements])
 
   const onNextPage = React.useCallback(() => {
     setPageable({...pageable, page: pageable.page + 1})
-  }, [pageable.page]);
+  }, [pageable.page])
 
   const onPreviousPage = React.useCallback(() => {
     setPageable({...pageable, page: pageable.page - 1})
-  }, [pageable.page]);
+  }, [pageable.page])
 
   /* FORM FIELDS */
-  const [siteId, setSiteId] = React.useState<string>("");
+  const [siteId, setSiteId] = React.useState<string>("")
 
   /* DELETE SITE HANDLE */
   async function deleteSiteHandler(){
     if(siteId === "") toast.error("400: site id is required")
     else {
-      const response = await deleteSiteAction(siteId, getAccessToken())
+      const response = await deleteSiteAction(siteId, await getToken())
 
       if (response.statusCode === 200) {
         setSiteId("")
         fetchAllSites()
-        toast.success(response.message);
+        toast.success(response.message)
       }
       else if(Number.isInteger(response.status)){
-        toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+        toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
       } else {
-        toast.error(response.statusCode + ": " + response.message);
+        toast.error(response.statusCode + ": " + response.message)
       }
     }
   }

@@ -1,52 +1,55 @@
 'use client'
+import React from 'react'
 import toast from 'react-hot-toast'
-import { getAccessToken, getUserName, getUserRole, removeAccessToken, removeRefreshToken, removeUserRole } from '@/lib/tokenService'
-import { useRouter } from "next/navigation";
+import Image from 'next/image'
+import { getAccessToken, getUserName, getUserRole, removeAccessToken, removeRefreshToken, removeUserRole } from '@/services/tokenService'
+import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleDown, faBars } from '@fortawesome/free-solid-svg-icons'
-import { sidebarData } from '../lib/sidebarData';
-import { useState } from 'react';
-import {Button} from "@nextui-org/react";
-import Image from 'next/image';
-import { logoutAction } from '@/server/_logoutAction';
+import { sideNavData } from '../lib/sideNavData'
+import { Button } from '@nextui-org/react'
+import { logoutAction } from '@/server/_logoutAction'
 
 const userData = {
     userName: getUserName(),
     userRole: getUserRole(),
-};
+}
 
 export default function SideNav() {
     const router = useRouter()
 
-    const [showSubMenu, setShowSubMenu] = useState(false);
-    const [selectedMenu, setSelectedMenu] = useState('');
+    const [showSubMenu, setShowSubMenu] = React.useState(false)
+    const [selectedMenu, setSelectedMenu] = React.useState('')
 
-    const toggleSubMenu = (menu: string) => {
-
-        if (selectedMenu === menu) {           
-          setShowSubMenu(!showSubMenu);
-          setSelectedMenu('');
-        } else {
-          setShowSubMenu(true);
-          setSelectedMenu(menu);
-        }        
-    };
+    const toggleSubMenu = (item: any) => {
+        if(item.access !== userData.userRole){
+            toast.error("403: You are not authorized to access")
+        }else{
+            if (selectedMenu === item.menu) {           
+                setShowSubMenu(!showSubMenu)
+                setSelectedMenu('')
+              } else {
+                setShowSubMenu(true)
+                setSelectedMenu(item.menu)
+              }  
+        }  
+    }
 
     const getMenuClassName = (menu: string) => {
         if (selectedMenu === menu) {
-          return 'selected-menu';
+          return 'selected-menu'
         }
-    };
+    }
 
     const handleNavigation = (route: string) => {
-        router.push(route);
-    };
+        router.push(route)
+    }
 
     async function logout(){
         const response: ResponseMessage = await logoutAction(getAccessToken())
 
         if (response.statusCode === 200) {
-            toast.success(response.message);
+            toast.success(response.message)
             removeAccessToken()
             removeRefreshToken()
             removeUserRole()
@@ -54,9 +57,9 @@ export default function SideNav() {
             router.push('/login')
         } 
         else if(Number.isInteger(response.status)){
-            toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
+            toast.error(response.status + ": " + response.title?.toLocaleLowerCase())
         }else {
-            toast.error(response.statusCode + ": " + response.message);
+            toast.error(response.statusCode + ": " + response.message)
         }
     }
 
@@ -76,10 +79,10 @@ export default function SideNav() {
 
                 {/* SECTION 2 */}
                 <ul className="flex-1 px-3">
-                    {sidebarData.map((item) => (
+                    {sideNavData.map((item) => (
                         <div key={item.menu}>
                             <div className={`menu-style ${getMenuClassName(item.menu)} hover:bg-zinc-100`}
-                                 onClick={() => toggleSubMenu(item.menu)}
+                                 onClick={() => toggleSubMenu(item)}
                             >
                                 <div className="flex items-center">
                                     <div className="w-7 flex justify-start">
@@ -121,7 +124,7 @@ export default function SideNav() {
                         width={45} height={45} alt={'user'}
                         className='rounded-full'
                     />
-                    <div className='flex justify-between items-center w-52 ml-3'>
+                    <div className='flex justify-between items-center w-52 ml-3 mr-4'>
                         <div className='leading-4'>
                             <h4 className='font-semibold text-sm'>{userData.userRole}</h4>
                             <span className='text-xs text-gray-600'>{userData.userName}</span>
