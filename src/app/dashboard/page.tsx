@@ -1,5 +1,5 @@
 'use client'
-import { getUserRole } from '@/services/tokenService'
+import { getUserRole, validateRefreshToken } from '@/services/tokenService'
 import { useRouter } from 'next/navigation'
 import toast from 'react-hot-toast'
 
@@ -9,16 +9,17 @@ const userData = {
 
 export default function Dashboard() {
   const router = useRouter()
-
-  if(userData.userRole === 'ADMIN'){
+  if(!validateRefreshToken()) router.push("/login")
+  
+  if(userData.userRole === 'ADMIN') 
     router.push("/dashboard/user/create")
-  }else if(userData.userRole === 'PROCUREMENT_MANAGER'){
+  else if(userData.userRole === 'PROCUREMENT_MANAGER')
     router.push("/dashboard/procurement/approval")
-  }else{
+  else{
     toast.error('403: You are not authorized to access')
     router.push("/login")
   }
-  
+
   return (
     <>
     </>
