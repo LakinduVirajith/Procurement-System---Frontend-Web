@@ -42,7 +42,7 @@ export default function OrderApproval() {
     if(!response.statusCode){      
       setOrdersData(response)
       setIsLoading(false)
-      setTotalPages(Math.round(response.length / pageSize))
+      setTotalPages(Math.ceil(response.length / pageSize))
     }else if(Number.isInteger(response.status)){
       toast.error(response.status + ": " + response.title?.toLocaleLowerCase());
       setIsLoading(false)

@@ -73,6 +73,11 @@ type OrderDTO = {
   siteId: number
 }
 
+type AssignSupplier = {
+  orderId: string,
+  supplierId: string,
+}
+
 type Pageable = {
   page: number,
   size: number,
