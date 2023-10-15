@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { setAccessToken, setRefreshToken, setUserRole } from '@/services/tokenService'
+import { setAccessToken, setRefreshToken, setUserRole, validateAccessToken } from '@/services/tokenService'
 import { loginAction } from '@/server/_loginAction'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -11,6 +11,10 @@ import toast from 'react-hot-toast'
 
 export default function LoginPage() {
     const router = useRouter()
+    if(validateAccessToken()) {
+        router.push("/dashboard")
+    }
+
     const [email, setEmail] = React.useState("")
     const [password, setPassword] = React.useState("")
 
