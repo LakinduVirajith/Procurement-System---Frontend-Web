@@ -51,6 +51,14 @@ export default function AssignSupplier() {
     }
   }
 
+  /* PAGE DATA SET */
+  const items = React.useMemo(() => {
+    const start = (page - 1) * pageSize;
+    const end = start + pageSize;
+
+    return suppliersData.slice(start, end);
+  }, [page, suppliersData]);
+
   /* PAGEABLE OPTION */
   const bottomContent = React.useMemo(() => {
     return (
@@ -143,7 +151,7 @@ export default function AssignSupplier() {
         <TableBody  emptyContent={" "}
                     isLoading={isLoading}
                     loadingContent={<h1>Loading...</h1>}>
-          {suppliersData.map((row) =>
+          {items.map((row) =>
             <TableRow key={row.userId}>
               {(columnKey) => <TableCell>{getKeyValue(row, columnKey)}</TableCell>}
             </TableRow>
