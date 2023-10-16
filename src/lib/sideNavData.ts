@@ -1,4 +1,4 @@
-import { faUsersGear, faBuilding, faFileSignature } from '@fortawesome/free-solid-svg-icons'
+import { faUsersGear, faBuilding, faFileSignature, faBoxesPacking } from '@fortawesome/free-solid-svg-icons'
 
 export const sideNavData: SideNav = [
     {
@@ -21,6 +21,17 @@ export const sideNavData: SideNav = [
         { label: 'SITE INFORMATIONS', route: '/dashboard/site/info' },
         { label: 'CREATE SITE', route: '/dashboard/site/create' },
         { label: 'UPDATE SITE', route: '/dashboard/site/update' },
+      ],
+    },
+    {
+      menu: 'item',
+      icon: faBoxesPacking,
+      label: 'ITEM',
+      access: 'SITE_MANAGER',
+      submenu: [
+        { label: 'ITEM INFORMATIONS', route: '/dashboard/item/info' },
+        { label: 'CREATE ITEM', route: '/dashboard/item/create' },
+        { label: 'UPDATE ITEM', route: '/dashboard/item/update' },
       ],
     },
     {

@@ -26,18 +26,22 @@ export default function LoginPage() {
     async function loginHandler() {
         const response: AuthenticationResponse = await loginAction(email, password)
         
-        if(response.statusCode === 200) {            
-            if(response.accessToken)
-                setAccessToken(response.accessToken)
-            if(response.refreshToken)
-                setRefreshToken(response.refreshToken)
-            if(response.userRole)
-                setUserRole(response.userRole)
-            
-            toast.success(response.message)
-            router.push('/dashboard')
+        if(response.userRole === "ADMIN" || response.userRole === "SITE_MANAGER" || response.userRole === "PROCUREMENT_MANAGER"){
+            if(response.statusCode === 200) {            
+                if(response.accessToken)
+                    setAccessToken(response.accessToken)
+                if(response.refreshToken)
+                    setRefreshToken(response.refreshToken)
+                if(response.userRole)
+                    setUserRole(response.userRole)
+                
+                toast.success(response.message)
+                router.push('/dashboard')
+            }
+            else (toast.error(response.statusCode + ": " + response.message))
+        }else{
+            toast.error('403: You are not authorized to authenticate to the web')
         }
-        else (toast.error(response.statusCode + ": " + response.message))
     }
 
     return (

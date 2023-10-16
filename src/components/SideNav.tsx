@@ -2,7 +2,7 @@
 import React from 'react'
 import toast from 'react-hot-toast'
 import Image from 'next/image'
-import { getAccessToken, getUserName, getUserRole, removeAccessToken, removeRefreshToken, removeUserRole } from '@/services/tokenService'
+import { getToken, getUserName, getUserRole, removeAccessToken, removeRefreshToken, removeUserRole } from '@/services/tokenService'
 import { useRouter } from 'next/navigation'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faAngleLeft, faAngleDown, faBars } from '@fortawesome/free-solid-svg-icons'
@@ -46,7 +46,7 @@ export default function SideNav() {
     }
 
     async function logout(){
-        const response: ResponseMessage = await logoutAction(getAccessToken())
+        const response: ResponseMessage = await logoutAction(await getToken())
 
         if (response.statusCode === 200) {
             toast.success(response.message)
