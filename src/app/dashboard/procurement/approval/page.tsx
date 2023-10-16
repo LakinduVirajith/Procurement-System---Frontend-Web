@@ -18,7 +18,7 @@ export default function OrderApproval() {
   /* UNAUTHORIZED */
   if(getUserRole() !== 'PROCUREMENT_MANAGER'){
     toast.error('403: You are not authorized to access')
-    router.push('/dashboard/user/create')
+    router.push('/dashboard')
   }
 
   const [isLoading, setIsLoading] = React.useState(true)

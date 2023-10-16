@@ -20,7 +20,7 @@ export default function CreateDetails() {
   /* UNAUTHORIZED */
   if(getUserRole() !== 'ADMIN'){
     toast.error('403: You are not authorized to access')
-    router.push('/dashboard/procurement/approval')
+    router.push('/dashboard')
   }
 
   /* PASSWORD VISIBILITY */
