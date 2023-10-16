@@ -68,7 +68,7 @@ type SiteDTO = {
 }
 
 type ItemDTO = {
-  itemId?: number;
+  itemId?: string;
   name: string;
   description: string;
   manufacturer: string;
