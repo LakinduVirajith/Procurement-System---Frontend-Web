@@ -10,50 +10,50 @@ type SideNav = {
 }[]
 
 type AuthenticationRequest = {
-  email: string,
-  password: string
+  email: string;
+  password: string;
 }
 
 type AuthenticationResponse = {
-  statusCode: number
-  status: string,
-  message: string
-  userRole?: string,
-  accessToken?: string,
-  refreshToken?: string
+  statusCode: number;
+  status: string;
+  message: string;
+  userRole?: string;
+  accessToken?: string;
+  refreshToken?: string;
 }
 
 type ResponseMessage = {
-  statusCode: number,
-  status: string,
-  message: string,
-  title:? string,
+  statusCode: number;
+  status: string;
+  message: string;
+  title:? string;
 }
 
 type UserDTO = {
-  userId?: string
-  firstName: string,
-  lastName: string,
-  email: string,
-  mobileNumber: string,
-  password: string,
-  role: string,
-  isActive: string | boolean,
+  userId?: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  mobileNumber: string;
+  password: string;
+  role: string;
+  isActive: string | boolean;
 }
 
 type ResetPassword = {
-  email: string,
-  password: string,
+  email: string;
+  password: string;
 }
 
 type AllocateSite = {
-  siteId: string,
-  userEmail: string,
+  siteId: string;
+  userEmail: string;
 }
 
 type DeallocateSite = {
-  siteId: string,
-  userEmail: string,
+  siteId: string;
+  userEmail: string;
 }
 
 type SiteDTO = {
@@ -67,34 +67,45 @@ type SiteDTO = {
   procurementManagerId: string;
 }
 
+type ItemDTO = {
+  itemId?: number;
+  name: string;
+  description: string;
+  manufacturer: string;
+  price: string;
+  volumeType: string;
+  weight: string;
+  color: string;
+}
+
 type OrderDTO = {
-  orderId: number,
-  status: string,
-  requiredDate: string,
+  orderId: number;
+  status: string;
+  requiredDate: string;
   items: [
     {
-      orderItemId: number,
-      quantity: number,
-      status: string,
-      itemId: number,
-      orderId: number
+      orderItemId: number;
+      quantity: number;
+      status: string;
+      itemId: number;
+      orderId: number;
     }
   ],
-  supplierId: number,
-  siteId: number
+  supplierId: number;
+  siteId: number;
 }
 
 type AssignSupplier = {
-  orderId: string,
-  supplierId: string,
+  orderId: string;
+  supplierId: string;
 }
 
 type Pageable = {
-  page: number,
-  size: number,
+  page: number;
+  size: number;
   sort: [
     string
   ]
-  totalPages: number
-  totalElements: number
+  totalPages: number;
+  totalElements: number;
 }
