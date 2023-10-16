@@ -1,9 +1,5 @@
 
-<center>
-
 # Procurement for the Construction Industry - Web Frontend
-
-</center>
 
 ## Getting Started
 
