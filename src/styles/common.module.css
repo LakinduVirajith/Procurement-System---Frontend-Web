@@ -1,0 +1,54 @@
+.page-style{
+    @apply flex min-h-screen flex-col items-center p-24
+}
+.dashboard-style{
+    @apply bg-slate-200 h-screen p-8
+}
+
+/* TEXT STYLE */
+h1, h2, h3, h4, h5, h6{
+    @apply text-zinc-900
+}
+.error-text{
+    @apply text-red-700 font-normal text-sm pl-3 relative bottom-2.5
+}
+
+/* INPUT STYLES */
+.input-wapper{
+    @apply flex flex-col gap-1 mb-2
+}
+
+.input-style{
+    @apply bg-white rounded-xl text-black mb-4
+}
+
+/* BUTTON STYLES */
+.button-style-1{
+    @apply !bg-zinc-900 !text-white !rounded-lg
+}
+.button-style-2{
+    @apply !bg-green-700 !text-white !rounded-lg
+}
+.button-style-3{
+    @apply !bg-red-700 !text-white !rounded-lg
+}
+
+/* MENU STYLE */
+.menu-style{
+    @apply flex justify-between items-center text-zinc-900 my-1 px-3 py-2 cursor-pointer rounded-md
+}
+.selected-menu{
+    @apply bg-zinc-900 text-white hover:!bg-zinc-900
+}
+.list-style{
+    @apply rounded-md w-full text-black text-sm p-2 cursor-pointer
+}
+
+/* TABLE STYLES */
+
+.status-red-style{
+    @apply rounded-md bg-red-400 text-red-800 font-normal w-20 text-center px-4 py-2
+}
+.status-green-style{
+    @apply rounded-md bg-green-400 text-green-800 font-normal w-20 text-center px-4 py-2
+}
