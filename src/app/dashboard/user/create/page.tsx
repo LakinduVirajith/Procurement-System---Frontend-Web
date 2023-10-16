@@ -41,6 +41,7 @@ export default function UserCreate() {
     try {
       createUserSchema.parse(formData)
     } catch (error: any) {
+      toast.error("400: " + error.errors[0].message)
       setZodErrors(error.errors)
     }
   }
@@ -102,9 +103,6 @@ export default function UserCreate() {
                   variant="bordered" className="input-style" 
                   onChange={(e) => setFormData({ ...formData, firstName: e.target.value })}
           />
-          {zodErrors.find((error) => error.path[0] === 'firstName') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'firstName').message}</div>
-          )}
         </section>
         
         <section>
@@ -112,9 +110,6 @@ export default function UserCreate() {
                   variant="bordered" className="input-style" 
                   onChange={(e) => setFormData({ ...formData, lastName: e.target.value })}
           />
-          {zodErrors.find((error) => error.path[0] === 'lastName') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'lastName').message}</div>
-          )}
         </section>
 
         <section>
@@ -122,9 +117,6 @@ export default function UserCreate() {
                   variant="bordered" className="input-style" isClearable 
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
           />
-          {zodErrors.find((error) => error.path[0] === 'email') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'email').message}</div>
-          )}
         </section>
 
         <section>
@@ -132,9 +124,6 @@ export default function UserCreate() {
                   variant="bordered" className="input-style"
                   onChange={(e) => setFormData({ ...formData, mobileNumber: e.target.value })}
           />
-          {zodErrors.find((error) => error.path[0] === 'mobileNumber') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'mobileNumber').message}</div>
-          )}
         </section>
 
         <section>
@@ -152,9 +141,6 @@ export default function UserCreate() {
                   className="input-style"
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
           />
-          {zodErrors.find((error) => error.path[0] === 'password') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'password').message}</div>
-          )}
         </section>
 
         <section>
@@ -167,9 +153,6 @@ export default function UserCreate() {
               </SelectItem>
             ))}
           </Select>
-          {zodErrors.find((error) => error.path[0] === 'userRole') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'userRole').message}</div>
-          )}
         </section>
         
         <section>
@@ -182,9 +165,6 @@ export default function UserCreate() {
               </SelectItem>
             ))}
           </Select>
-          {zodErrors.find((error) => error.path[0] === 'isActive') && (
-            <div className='error-text'>{zodErrors.find((error) => error.path[0] === 'isActive').message}</div>
-          )}
         </section>
 
       </div>
